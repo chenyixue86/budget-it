@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-const BREADCRUMBS: Record<string, string> = {
+const LABELS: Record<string, string> = {
   "/dashboard": "Home",
   "/dashboard/inkomsten": "Inkomsten",
   "/dashboard/uitgaves": "Uitgaves",
@@ -20,26 +20,21 @@ export default function DashboardHeader() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
-      const fullName = user?.user_metadata?.full_name as string | undefined;
-      setName(fullName || user?.email?.split("@")[0] || "");
+      const full = user?.user_metadata?.full_name as string | undefined;
+      setName(full || user?.email?.split("@")[0] || "");
     });
   }, [supabase]);
 
-  const initial = name.charAt(0).toUpperCase();
-  const label = BREADCRUMBS[pathname] ?? "Dashboard";
-
   return (
     <header className="h-14 bg-white border-b border-gray-100 flex items-center justify-between px-8 shrink-0">
-      <div className="flex items-center gap-2 text-sm text-gray-400">
-        <span>{label}</span>
-      </div>
+      <span className="text-sm text-gray-400">{LABELS[pathname] ?? "Dashboard"}</span>
       <div className="flex items-center gap-4">
         <button className="text-gray-400 hover:text-gray-600 transition-colors">
           <BellIcon />
         </button>
         <div className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-700 font-medium">
           <div className="w-5 h-5 rounded-full bg-[#52b788] flex items-center justify-center text-white text-xs font-bold">
-            {initial}
+            {name.charAt(0).toUpperCase()}
           </div>
           {name}
           <ChevronIcon />
@@ -57,7 +52,6 @@ function BellIcon() {
     </svg>
   );
 }
-
 function ChevronIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

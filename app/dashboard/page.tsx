@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
 
@@ -13,14 +14,34 @@ const UITGAVES = [
 ];
 
 export default function Dashboard() {
+  const supabase = createClient();
   const [activeMonth, setActiveMonth] = useState("Apr");
+  const [inkomstenTotaal, setInkomstenTotaal] = useState<number | null>(null);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      const full = user?.user_metadata?.full_name as string | undefined;
+      setUserName(full?.split(" ")[0] || user?.email?.split("@")[0] || "");
+    });
+
+    supabase.from("inkomsten").select("bedrag").then(({ data }) => {
+      if (data) setInkomstenTotaal(data.reduce((s: number, i: { bedrag: number }) => s + i.bedrag, 0));
+    });
+  }, [supabase]);
+
+  const inkStr = inkomstenTotaal === null
+    ? "..."
+    : "€ " + inkomstenTotaal.toLocaleString("nl-NL", { minimumFractionDigits: 0 });
 
   return (
     <>
       {/* Greeting */}
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Hallo 👋</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Hallo{userName ? `, ${userName}` : ""} 👋
+          </h1>
           <p className="text-gray-400 mt-1 text-sm">Welkom bij je budget overzicht.</p>
         </div>
         {/* Month filter */}
@@ -30,9 +51,7 @@ export default function Dashboard() {
               key={m}
               onClick={() => setActiveMonth(m)}
               className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
-                activeMonth === m
-                  ? "bg-[#2d6a4f] text-white"
-                  : "text-gray-400 hover:text-gray-700"
+                activeMonth === m ? "bg-[#2d6a4f] text-white" : "text-gray-400 hover:text-gray-700"
               }`}
             >
               {m}
@@ -43,9 +62,9 @@ export default function Dashboard() {
 
       {/* Stats cards */}
       <div className="grid grid-cols-3 gap-5 mb-6">
-        <StatCard label="Inkomsten" value="€ 3.200" sub="deze maand" trend="+5.2%" positive />
-        <StatCard label="Vaste Lasten" value="€ 1.450" sub="maandelijks" trend="45.3% van inkomen" positive={false} />
-        <StatCard label="Vrij besteedbaar" value="€ 1.750" sub="resterend" trend="54.7% van inkomen" positive />
+        <StatCard label="Inkomsten" value={inkStr} sub="per maand" trend="totaal inkomen" positive />
+        <StatCard label="Vaste Lasten" value="€ —" sub="maandelijks" trend="nog in te vullen" positive={false} />
+        <StatCard label="Vrij besteedbaar" value="€ —" sub="resterend" trend="nog in te vullen" positive />
       </div>
 
       {/* Bottom section */}
@@ -57,19 +76,17 @@ export default function Dashboard() {
   );
 }
 
-function StatCard({
-  label, value, sub, trend, positive,
-}: {
+function StatCard({ label, value, sub, trend, positive }: {
   label: string; value: string; sub: string; trend: string; positive: boolean;
 }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-6">
-      <div className="flex items-center gap-2 text-gray-400 text-sm mb-4">
-        <span>{label}</span>
-      </div>
+      <div className="text-gray-400 text-sm mb-4">{label}</div>
       <p className="text-3xl font-bold text-gray-900 mb-3">{value}</p>
       <div className="flex items-center gap-2">
-        <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${positive ? "bg-green-50 text-green-600" : "bg-orange-50 text-orange-500"}`}>
+        <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${
+          positive ? "bg-green-50 text-green-600" : "bg-orange-50 text-orange-500"
+        }`}>
           {positive ? "↑" : "→"} {trend}
         </span>
         <span className="text-gray-400 text-xs">{sub}</span>
@@ -108,12 +125,9 @@ function UitgavesCard() {
 function BudgetHealth() {
   const healthy = 54.7;
   const vasteLasten = 45.3;
-
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-6">
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="font-semibold text-gray-800 text-sm">Budget verdeling</h3>
-      </div>
+      <h3 className="font-semibold text-gray-800 text-sm mb-5">Budget verdeling</h3>
       <div className="flex items-center gap-8">
         <div className="relative shrink-0">
           <svg width="120" height="120" viewBox="0 0 120 120">
@@ -133,7 +147,7 @@ function BudgetHealth() {
           <LegendItem color="bg-[#52b788]" label="Vrij besteedbaar" value="54.7%" />
           <LegendItem color="bg-red-300" label="Vaste lasten" value="45.3%" />
           <div className="pt-2 border-t border-gray-100 text-xs text-gray-400">
-            Inkomen: € 3.200 / maand
+            Inkomen: zie Inkomsten tab
           </div>
         </div>
       </div>

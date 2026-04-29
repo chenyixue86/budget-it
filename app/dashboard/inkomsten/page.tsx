@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 type Inkomen = { id: string; naam: string; bedrag: number };
 
 export default function InkomstenPage() {
   const supabase = createClient();
+  const router = useRouter();
   const [items, setItems] = useState<Inkomen[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [naam, setNaam] = useState("");
@@ -23,10 +25,11 @@ export default function InkomstenPage() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) setUserId(user.id);
+      if (!user) { router.push("/login"); return; }
+      setUserId(user.id);
     });
     load();
-  }, [load, supabase]);
+  }, [load, supabase, router]);
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
@@ -57,7 +60,6 @@ export default function InkomstenPage() {
         <p className="text-gray-400 mt-1 text-sm">Voeg je maandelijkse inkomensbronnen toe.</p>
       </div>
 
-      {/* Total */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
         <p className="text-sm text-gray-400 mb-1">Totaal per maand</p>
         <p className="text-4xl font-bold text-gray-900">
@@ -66,7 +68,6 @@ export default function InkomstenPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-5">
-        {/* Add form */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
           <h3 className="font-semibold text-gray-800 text-sm mb-4">Inkomen toevoegen</h3>
           <form onSubmit={add} className="space-y-3">
@@ -104,7 +105,6 @@ export default function InkomstenPage() {
           </form>
         </div>
 
-        {/* List */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
           <h3 className="font-semibold text-gray-800 text-sm mb-4">Inkomensbronnen</h3>
           {items.length === 0 ? (

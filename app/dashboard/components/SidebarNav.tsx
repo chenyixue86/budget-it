@@ -59,7 +59,6 @@ function HomeIcon({ active }: { active: boolean }) {
     </svg>
   );
 }
-
 function InkomenIcon({ active }: { active: boolean }) {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#2d6a4f" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -68,7 +67,6 @@ function InkomenIcon({ active }: { active: boolean }) {
     </svg>
   );
 }
-
 function UitgavesIcon({ active }: { active: boolean }) {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#2d6a4f" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -78,7 +76,6 @@ function UitgavesIcon({ active }: { active: boolean }) {
     </svg>
   );
 }
-
 function VasteLastenIcon({ active }: { active: boolean }) {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#2d6a4f" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -88,7 +85,6 @@ function VasteLastenIcon({ active }: { active: boolean }) {
     </svg>
   );
 }
-
 function OverzichtIcon({ active }: { active: boolean }) {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#2d6a4f" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -98,7 +94,6 @@ function OverzichtIcon({ active }: { active: boolean }) {
     </svg>
   );
 }
-
 function InstellingenIcon({ active }: { active: boolean }) {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#2d6a4f" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
