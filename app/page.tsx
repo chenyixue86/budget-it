@@ -38,24 +38,24 @@ function Navbar() {
 function Hero() {
   return (
     <section className="flex flex-col items-center justify-center text-center px-6 pt-40 pb-28 relative overflow-hidden">
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="hero-blob absolute top-1/3 left-1/2 w-[600px] h-[400px] bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="inline-flex items-center gap-2 bg-green-400/10 border border-green-400/20 text-green-400 text-xs font-medium px-3 py-1.5 rounded-full mb-8">
+      <div className="hero-badge inline-flex items-center gap-2 bg-green-400/10 border border-green-400/20 text-green-400 text-xs font-medium px-3 py-1.5 rounded-full mb-8">
         <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
         100% gratis, altijd
       </div>
 
-      <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] max-w-3xl mb-6">
+      <h1 className="hero-h1 text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] max-w-3xl mb-6">
         Jouw budget,<br />
         <span className="text-green-400">onder controle.</span>
       </h1>
 
-      <p className="text-white/50 text-lg md:text-xl max-w-xl mb-10 leading-relaxed">
+      <p className="hero-sub text-white/50 text-lg md:text-xl max-w-xl mb-10 leading-relaxed">
         Voer je inkomsten, uitgaves en vaste lasten in.
         budget-it berekent alles automatisch en geeft je een helder overzicht.
       </p>
 
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="hero-cta flex flex-col sm:flex-row gap-3">
         <a
           href="/register"
           className="btn-primary text-black font-semibold px-7 py-3.5 rounded-xl text-sm"
@@ -71,10 +71,10 @@ function Hero() {
       </div>
 
       {/* Dashboard mockup — tilted */}
-      <div className="mt-20 w-full max-w-5xl mx-auto px-4" style={{ perspective: "1200px" }}>
+      <div className="hero-mockup mt-20 w-full max-w-5xl mx-auto px-4" style={{ perspective: "1200px" }}>
         <div
-          className="rounded-2xl overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.7)] border border-white/10"
-          style={{ transform: "rotateX(8deg) rotateY(-4deg) rotate(1deg)", transformOrigin: "center top" }}
+          className="mockup-float rounded-2xl overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.7)] border border-white/10"
+          style={{ transformOrigin: "center top" }}
         >
           {/* Dashboard shell — light theme */}
           <div className="flex bg-[#f5f6f8]" style={{ minHeight: "420px" }}>
@@ -237,7 +237,7 @@ function Features() {
           {items.map((item) => (
             <div
               key={item.title}
-              className="bg-[#111111] border border-white/5 rounded-2xl p-6 hover:border-green-400/20 transition-colors"
+              className="feature-card bg-[#111111] border border-white/5 rounded-2xl p-6 hover:border-green-400/20"
             >
               <div className="text-3xl mb-4">{item.icon}</div>
               <h3 className="font-semibold text-white mb-2">{item.title}</h3>
