@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 export default function RegisterPage() {
@@ -42,9 +43,9 @@ export default function RegisterPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <a href="/" className="text-2xl font-bold tracking-tight text-white">
+          <Link href="/" className="text-2xl font-bold tracking-tight text-white">
             budget<span className="text-green-400">-it</span>
-          </a>
+          </Link>
           <p className="text-white/40 text-sm mt-2">Maak een gratis account aan</p>
         </div>
 

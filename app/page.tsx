@@ -195,28 +195,6 @@ function Hero() {
   );
 }
 
-function MockCard({ label, value, color }: { label: string; value: string; color: string }) {
-  return (
-    <div className="rounded-xl bg-[#1a1a1a] border border-white/5 p-4">
-      <p className="text-xs text-white/40 mb-1">{label}</p>
-      <p className={`text-xl font-bold ${color}`}>{value}</p>
-    </div>
-  );
-}
-
-function BudgetBar({ label, pct, color }: { label: string; pct: number; color: string }) {
-  return (
-    <div>
-      <div className="flex justify-between text-xs text-white/50 mb-1">
-        <span>{label}</span>
-        <span>{pct}%</span>
-      </div>
-      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-        <div className={`h-full ${color} rounded-full`} style={{ width: `${pct}%` }} />
-      </div>
-    </div>
-  );
-}
 
 function Features() {
   const items = [
