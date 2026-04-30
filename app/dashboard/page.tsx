@@ -5,18 +5,13 @@ import { createClient } from "@/lib/supabase/client";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
 
-const UITGAVES = [
-  { category: "Boodschappen", amount: 380, pct: 26 },
-  { category: "Uit eten", amount: 210, pct: 14 },
-  { category: "Transport", amount: 160, pct: 11 },
-  { category: "Kleding", amount: 120, pct: 8 },
-  { category: "Entertainment", amount: 95, pct: 6 },
-];
+type UitgaveItem = { id: string; naam: string; bedrag: number };
 
 export default function Dashboard() {
   const supabase = createClient();
   const [activeMonth, setActiveMonth] = useState("Apr");
   const [inkomstenTotaal, setInkomstenTotaal] = useState<number | null>(null);
+  const [uitgaves, setUitgaves] = useState<UitgaveItem[]>([]);
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
@@ -27,6 +22,10 @@ export default function Dashboard() {
 
     supabase.from("inkomsten").select("bedrag").then(({ data }) => {
       if (data) setInkomstenTotaal(data.reduce((s: number, i: { bedrag: number }) => s + i.bedrag, 0));
+    });
+
+    supabase.from("uitgaves").select("id, naam, bedrag").order("created_at").then(({ data }) => {
+      if (data) setUitgaves(data);
     });
   }, [supabase]);
 
@@ -69,7 +68,7 @@ export default function Dashboard() {
 
       {/* Bottom section */}
       <div className="grid grid-cols-2 gap-5">
-        <UitgavesCard />
+        <UitgavesCard items={uitgaves} />
         <BudgetHealth />
       </div>
     </>
@@ -95,29 +94,41 @@ function StatCard({ label, value, sub, trend, positive }: {
   );
 }
 
-function UitgavesCard() {
+function UitgavesCard({ items }: { items: UitgaveItem[] }) {
+  const totaal = items.reduce((s, i) => s + i.bedrag, 0);
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-6">
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-semibold text-gray-800 text-sm">Uitgaves deze maand</h3>
-        <span className="text-xs text-gray-400">Totaal: € 965</span>
+        <span className="text-xs text-gray-400">
+          Totaal: € {totaal.toLocaleString("nl-NL", { minimumFractionDigits: 0 })}
+        </span>
       </div>
-      <div className="space-y-3">
-        {UITGAVES.map((item) => (
-          <div key={item.category}>
-            <div className="flex items-center justify-between text-sm mb-1.5">
-              <span className="text-gray-600">{item.category}</span>
-              <div className="flex items-center gap-3">
-                <span className="text-gray-800 font-medium">€ {item.amount}</span>
-                <span className="text-xs text-gray-400 w-8 text-right">{item.pct}%</span>
+      {items.length === 0 ? (
+        <p className="text-sm text-gray-300 text-center py-8">Nog geen uitgaves toegevoegd.</p>
+      ) : (
+        <div className="space-y-3">
+          {items.map((item) => {
+            const pct = totaal > 0 ? Math.round((item.bedrag / totaal) * 100) : 0;
+            return (
+              <div key={item.id}>
+                <div className="flex items-center justify-between text-sm mb-1.5">
+                  <span className="text-gray-600">{item.naam}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-gray-800 font-medium">
+                      € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 0 })}
+                    </span>
+                    <span className="text-xs text-gray-400 w-8 text-right">{pct}%</span>
+                  </div>
+                </div>
+                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-[#52b788] rounded-full" style={{ width: `${pct}%` }} />
+                </div>
               </div>
-            </div>
-            <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-[#52b788] rounded-full" style={{ width: `${item.pct * 3}%` }} />
-            </div>
-          </div>
-        ))}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
