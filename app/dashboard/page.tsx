@@ -7,6 +7,8 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "
 
 type UitgaveItem = { id: string; naam: string; bedrag: number };
 
+const SEGMENT_COLORS = ["#fca5a5", "#fdba74", "#fde68a", "#93c5fd", "#c4b5fd", "#f9a8d4"];
+
 export default function Dashboard() {
   const supabase = createClient();
   const [activeMonth, setActiveMonth] = useState("Apr");
@@ -69,7 +71,7 @@ export default function Dashboard() {
       {/* Bottom section */}
       <div className="grid grid-cols-2 gap-5">
         <UitgavesCard items={uitgaves} />
-        <BudgetHealth />
+        <BudgetHealth uitgaves={uitgaves} inkomstenTotaal={inkomstenTotaal ?? 0} />
       </div>
     </>
   );
@@ -133,9 +135,31 @@ function UitgavesCard({ items }: { items: UitgaveItem[] }) {
   );
 }
 
-function BudgetHealth() {
-  const healthy = 54.7;
-  const vasteLasten = 45.3;
+function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; inkomstenTotaal: number }) {
+  const C = 2 * Math.PI * 46;
+  const totaalUitgaves = uitgaves.reduce((s, i) => s + i.bedrag, 0);
+  const vrijPct = inkomstenTotaal > 0
+    ? Math.max(0, ((inkomstenTotaal - totaalUitgaves) / inkomstenTotaal) * 100)
+    : 0;
+
+  const segments = [
+    ...uitgaves.map((item, i) => ({
+      naam: item.naam,
+      pct: inkomstenTotaal > 0 ? (item.bedrag / inkomstenTotaal) * 100 : 0,
+      color: SEGMENT_COLORS[i % SEGMENT_COLORS.length],
+    })),
+    { naam: "Vrij besteedbaar", pct: vrijPct, color: "#52b788" },
+  ];
+
+  let cumPct = 0;
+  const segmentsWithStart = segments.map((seg) => {
+    const startPct = cumPct;
+    cumPct += seg.pct;
+    return { ...seg, startPct };
+  });
+
+  const noData = inkomstenTotaal === 0 && uitgaves.length === 0;
+
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-6">
       <h3 className="font-semibold text-gray-800 text-sm mb-5">Budget verdeling</h3>
@@ -143,37 +167,51 @@ function BudgetHealth() {
         <div className="relative shrink-0">
           <svg width="120" height="120" viewBox="0 0 120 120">
             <circle cx="60" cy="60" r="46" fill="none" stroke="#f0f0f0" strokeWidth="12" />
-            <circle cx="60" cy="60" r="46" fill="none" stroke="#fca5a5" strokeWidth="12"
-              strokeDasharray={`${(vasteLasten / 100) * 289} 289`} strokeLinecap="round" transform="rotate(-90 60 60)" />
-            <circle cx="60" cy="60" r="46" fill="none" stroke="#52b788" strokeWidth="12"
-              strokeDasharray={`${(healthy / 100) * 289} 289`} strokeLinecap="round"
-              transform={`rotate(${-90 + (vasteLasten / 100) * 360} 60 60)`} />
+            {noData ? (
+              <circle cx="60" cy="60" r="46" fill="none" stroke="#e5e7eb" strokeWidth="12" />
+            ) : (
+              segmentsWithStart.map((seg, i) =>
+                seg.pct > 0 ? (
+                  <circle
+                    key={i}
+                    cx="60" cy="60" r="46"
+                    fill="none"
+                    stroke={seg.color}
+                    strokeWidth="12"
+                    strokeDasharray={`${(seg.pct / 100) * C} ${C}`}
+                    strokeLinecap="butt"
+                    transform={`rotate(${-90 + (seg.startPct / 100) * 360} 60 60)`}
+                  />
+                ) : null
+              )
+            )}
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-xl font-bold text-gray-900">{healthy}%</span>
+            <span className="text-xl font-bold text-gray-900">
+              {noData ? "—" : `${vrijPct.toFixed(0)}%`}
+            </span>
             <span className="text-xs text-gray-400">vrij</span>
           </div>
         </div>
-        <div className="space-y-3 flex-1">
-          <LegendItem color="bg-[#52b788]" label="Vrij besteedbaar" value="54.7%" />
-          <LegendItem color="bg-red-300" label="Vaste lasten" value="45.3%" />
-          <div className="pt-2 border-t border-gray-100 text-xs text-gray-400">
-            Inkomen: zie Inkomsten tab
-          </div>
+
+        <div className="space-y-2.5 flex-1">
+          {noData ? (
+            <p className="text-sm text-gray-300">Voeg inkomsten en uitgaves toe.</p>
+          ) : (
+            segmentsWithStart.map((seg, i) => (
+              <div key={i} className="flex items-center justify-between">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: seg.color }} />
+                  <span className="text-sm text-gray-500 truncate">{seg.naam}</span>
+                </div>
+                <span className="text-sm font-medium text-gray-700 ml-2 shrink-0">
+                  {seg.pct.toFixed(0)}%
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </div>
-    </div>
-  );
-}
-
-function LegendItem({ color, label, value }: { color: string; label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <div className={`w-2.5 h-2.5 rounded-full ${color}`} />
-        <span className="text-sm text-gray-500">{label}</span>
-      </div>
-      <span className="text-sm font-medium text-gray-700">{value}</span>
     </div>
   );
 }
