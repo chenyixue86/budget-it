@@ -138,18 +138,11 @@ function UitgavesCard({ items }: { items: UitgaveItem[] }) {
 function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; inkomstenTotaal: number }) {
   const C = 2 * Math.PI * 46;
   const totaalUitgaves = uitgaves.reduce((s, i) => s + i.bedrag, 0);
-  const vrijPct = inkomstenTotaal > 0
-    ? Math.max(0, ((inkomstenTotaal - totaalUitgaves) / inkomstenTotaal) * 100)
-    : 0;
-
-  const segments = [
-    ...uitgaves.map((item, i) => ({
-      naam: item.naam,
-      pct: inkomstenTotaal > 0 ? (item.bedrag / inkomstenTotaal) * 100 : 0,
-      color: SEGMENT_COLORS[i % SEGMENT_COLORS.length],
-    })),
-    { naam: "Vrij besteedbaar", pct: vrijPct, color: "#52b788" },
-  ];
+  const segments = uitgaves.map((item, i) => ({
+    naam: item.naam,
+    pct: totaalUitgaves > 0 ? (item.bedrag / totaalUitgaves) * 100 : 0,
+    color: SEGMENT_COLORS[i % SEGMENT_COLORS.length],
+  }));
 
   let cumPct = 0;
   const segmentsWithStart = segments.map((seg) => {
@@ -187,10 +180,9 @@ function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; 
             )}
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-xl font-bold text-gray-900">
-              {noData ? "—" : `${vrijPct.toFixed(0)}%`}
+            <span className="text-xs text-gray-400 text-center leading-tight">
+              {noData ? "—" : `${uitgaves.length} posten`}
             </span>
-            <span className="text-xs text-gray-400">vrij</span>
           </div>
         </div>
 
