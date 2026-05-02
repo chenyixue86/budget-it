@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useTheme } from "./ThemeProvider";
+import { useTheme } from "@/app/components/ThemeProvider";
 
 const LABELS: Record<string, string> = {
   "/dashboard": "Home",
