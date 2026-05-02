@@ -1,5 +1,6 @@
 import LandingNavbar from "./components/LandingNavbar";
 import BugReportForm from "./components/BugReportForm";
+import ComparisonSection from "./components/ComparisonSection";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <Hero />
       <Features />
       <HowItWorks />
+      <ComparisonSection />
       <BugReport />
       <Footer />
     </main>
