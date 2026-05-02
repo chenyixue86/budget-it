@@ -6,6 +6,10 @@ import { createClient } from "@/lib/supabase/client";
 
 type Item = { id: string; naam: string; bedrag: number };
 
+function fmt(n: number) {
+  return n.toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 export default function OverzichtPage() {
   const supabase = createClient();
   const router = useRouter();
@@ -48,96 +52,79 @@ export default function OverzichtPage() {
         <p className="text-gray-400 mt-1 text-sm">Jouw inkomsten en uitgaves in één overzicht.</p>
       </div>
 
-      {/* Big summary card */}
-      <div className={`rounded-2xl p-8 mb-6 ${over >= 0 ? "bg-[#f0faf4] border border-[#52b788]/30" : "bg-red-50 border border-red-200"}`}>
-        <p className="text-sm font-medium text-gray-500 mb-2">Wat je overhoudt deze maand</p>
-        <p className={`text-5xl font-bold mb-4 ${over >= 0 ? "text-[#2d6a4f]" : "text-red-500"}`}>
-          {over >= 0 ? "+" : ""}€ {Math.abs(over).toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </p>
-
-        {/* Progress bar: hoeveel van inkomen is uitgegeven */}
-        <div className="mb-2">
-          <div className="flex justify-between text-xs text-gray-400 mb-1.5">
-            <span>{uitPct.toFixed(0)}% van inkomen uitgegeven</span>
-            <span>{(100 - uitPct).toFixed(0)}% over</span>
-          </div>
-          <div className="h-3 bg-white/60 rounded-full overflow-hidden">
-            <div
-              className={`h-full rounded-full transition-all ${uitPct > 90 ? "bg-red-400" : uitPct > 70 ? "bg-orange-400" : "bg-[#52b788]"}`}
-              style={{ width: `${uitPct}%` }}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Two columns: inkomsten + uitgaves */}
-      <div className="grid grid-cols-2 gap-5">
+      <div className="max-w-2xl space-y-3">
 
         {/* Inkomsten */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-semibold text-gray-800 text-sm">Inkomsten</h3>
-            <span className="text-sm font-bold text-[#2d6a4f]">
-              € {totaalInkomsten.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
-            </span>
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#52b788]" />
+              <span className="text-sm font-semibold text-gray-800">Inkomsten</span>
+            </div>
+            <span className="text-sm font-bold text-[#2d6a4f]">+ € {fmt(totaalInkomsten)}</span>
           </div>
           {inkomsten.length === 0 ? (
             <p className="text-sm text-gray-300 text-center py-6">Geen inkomsten toegevoegd.</p>
           ) : (
-            <div className="space-y-2">
-              {inkomsten.map((item) => {
-                const pct = totaalInkomsten > 0 ? (item.bedrag / totaalInkomsten) * 100 : 0;
-                return (
-                  <div key={item.id} className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-xl">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-[#52b788]" />
-                      <span className="text-sm text-gray-700">{item.naam}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-400">{pct.toFixed(0)}%</span>
-                      <span className="text-sm font-semibold text-gray-900">
-                        € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="divide-y divide-gray-50">
+              {inkomsten.map((item) => (
+                <div key={item.id} className="flex items-center justify-between px-5 py-3">
+                  <span className="text-sm text-gray-600">{item.naam}</span>
+                  <span className="text-sm font-medium text-gray-900">€ {fmt(item.bedrag)}</span>
+                </div>
+              ))}
             </div>
           )}
         </div>
 
         {/* Uitgaves */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-semibold text-gray-800 text-sm">Uitgaves</h3>
-            <span className="text-sm font-bold text-orange-500">
-              € {totaalUitgaves.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
-            </span>
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-orange-300" />
+              <span className="text-sm font-semibold text-gray-800">Uitgaves</span>
+            </div>
+            <span className="text-sm font-bold text-orange-500">− € {fmt(totaalUitgaves)}</span>
           </div>
           {uitgaves.length === 0 ? (
             <p className="text-sm text-gray-300 text-center py-6">Geen uitgaves toegevoegd.</p>
           ) : (
-            <div className="space-y-2">
-              {uitgaves.map((item) => {
-                const pct = totaalUitgaves > 0 ? (item.bedrag / totaalUitgaves) * 100 : 0;
-                return (
-                  <div key={item.id} className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-xl">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-orange-300" />
-                      <span className="text-sm text-gray-700">{item.naam}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-400">{pct.toFixed(0)}%</span>
-                      <span className="text-sm font-semibold text-gray-900">
-                        € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="divide-y divide-gray-50">
+              {uitgaves.map((item) => (
+                <div key={item.id} className="flex items-center justify-between px-5 py-3">
+                  <span className="text-sm text-gray-600">{item.naam}</span>
+                  <span className="text-sm font-medium text-gray-900">€ {fmt(item.bedrag)}</span>
+                </div>
+              ))}
             </div>
           )}
         </div>
+
+        {/* Divider line */}
+        <div className="border-t-2 border-dashed border-gray-200 mx-1" />
+
+        {/* Balance */}
+        <div className={`rounded-2xl p-5 ${over >= 0 ? "bg-[#f0faf4] border border-[#52b788]/30" : "bg-red-50 border border-red-200"}`}>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm font-semibold text-gray-600">Wat je overhoudt</p>
+            <p className={`text-2xl font-bold ${over >= 0 ? "text-[#2d6a4f]" : "text-red-500"}`}>
+              {over >= 0 ? "+" : "−"} € {fmt(Math.abs(over))}
+            </p>
+          </div>
+          <div>
+            <div className="flex justify-between text-xs text-gray-400 mb-1.5">
+              <span>{uitPct.toFixed(0)}% van inkomen uitgegeven</span>
+              <span>{(100 - uitPct).toFixed(0)}% over</span>
+            </div>
+            <div className="h-2.5 bg-white/70 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${uitPct > 90 ? "bg-red-400" : uitPct > 70 ? "bg-orange-400" : "bg-[#52b788]"}`}
+                style={{ width: `${uitPct}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
       </div>
     </>
   );
