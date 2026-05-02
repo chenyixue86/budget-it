@@ -56,34 +56,34 @@ export default function InkomstenPage() {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Inkomsten</h1>
-        <p className="text-gray-400 mt-1 text-sm">Voeg je maandelijkse inkomensbronnen toe.</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Inkomsten</h1>
+        <p className="text-gray-400 dark:text-white/40 mt-1 text-sm">Voeg je maandelijkse inkomensbronnen toe.</p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
-        <p className="text-sm text-gray-400 mb-1">Totaal per maand</p>
-        <p className="text-4xl font-bold text-gray-900">
+      <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 mb-6 transition-colors duration-200">
+        <p className="text-sm text-gray-400 dark:text-white/40 mb-1">Totaal per maand</p>
+        <p className="text-4xl font-bold text-gray-900 dark:text-white">
           € {totaal.toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-5">
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <h3 className="font-semibold text-gray-800 text-sm mb-4">Inkomen toevoegen</h3>
+        <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
+          <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">Inkomen toevoegen</h3>
           <form onSubmit={add} className="space-y-3">
             <div>
-              <label className="block text-xs text-gray-400 mb-1.5">Omschrijving</label>
+              <label className="block text-xs text-gray-400 dark:text-white/40 mb-1.5">Omschrijving</label>
               <input
                 type="text"
                 value={naam}
                 onChange={(e) => setNaam(e.target.value)}
                 placeholder="Salaris"
                 required
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#52b788] transition-colors"
+                className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors"
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1.5">Bedrag per maand (€)</label>
+              <label className="block text-xs text-gray-400 dark:text-white/40 mb-1.5">Bedrag per maand (€)</label>
               <input
                 type="number"
                 value={bedrag}
@@ -92,7 +92,7 @@ export default function InkomstenPage() {
                 min="0"
                 step="0.01"
                 required
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#52b788] transition-colors"
+                className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors"
               />
             </div>
             <button
@@ -105,22 +105,22 @@ export default function InkomstenPage() {
           </form>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <h3 className="font-semibold text-gray-800 text-sm mb-4">Inkomensbronnen</h3>
+        <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
+          <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">Inkomensbronnen</h3>
           {items.length === 0 ? (
-            <p className="text-sm text-gray-300 text-center py-8">Nog geen inkomsten toegevoegd.</p>
+            <p className="text-sm text-gray-300 dark:text-white/20 text-center py-8">Nog geen inkomsten toegevoegd.</p>
           ) : (
             <div className="space-y-2">
               {items.map((item) => (
-                <div key={item.id} className="flex items-center justify-between py-2.5 px-3 bg-gray-50 rounded-xl">
-                  <span className="text-sm text-gray-700">{item.naam}</span>
+                <div key={item.id} className="flex items-center justify-between py-2.5 px-3 bg-gray-50 dark:bg-white/5 rounded-xl">
+                  <span className="text-sm text-gray-700 dark:text-white/70">{item.naam}</span>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
                       € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
                     </span>
                     <button
                       onClick={() => remove(item.id)}
-                      className="text-gray-300 hover:text-red-400 transition-colors"
+                      className="text-gray-300 dark:text-white/20 hover:text-red-400 transition-colors"
                       aria-label="Verwijder"
                     >
                       <TrashIcon />

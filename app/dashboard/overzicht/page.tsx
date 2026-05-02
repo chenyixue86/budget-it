@@ -40,7 +40,7 @@ export default function OverzichtPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-gray-400 text-sm">Laden...</p>
+        <p className="text-gray-400 dark:text-white/40 text-sm">Laden...</p>
       </div>
     );
   }
@@ -48,29 +48,29 @@ export default function OverzichtPage() {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Overzicht</h1>
-        <p className="text-gray-400 mt-1 text-sm">Jouw inkomsten en uitgaves in één overzicht.</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Overzicht</h1>
+        <p className="text-gray-400 dark:text-white/40 mt-1 text-sm">Jouw inkomsten en uitgaves in één overzicht.</p>
       </div>
 
       <div className="max-w-2xl space-y-3">
 
         {/* Inkomsten */}
-        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
+        <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 overflow-hidden transition-colors duration-200">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50 dark:border-white/5">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#52b788]" />
-              <span className="text-sm font-semibold text-gray-800">Inkomsten</span>
+              <span className="text-sm font-semibold text-gray-800 dark:text-white/80">Inkomsten</span>
             </div>
-            <span className="text-sm font-bold text-[#2d6a4f]">+ € {fmt(totaalInkomsten)}</span>
+            <span className="text-sm font-bold text-[#2d6a4f] dark:text-[#52b788]">+ € {fmt(totaalInkomsten)}</span>
           </div>
           {inkomsten.length === 0 ? (
-            <p className="text-sm text-gray-300 text-center py-6">Geen inkomsten toegevoegd.</p>
+            <p className="text-sm text-gray-300 dark:text-white/20 text-center py-6">Geen inkomsten toegevoegd.</p>
           ) : (
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-gray-50 dark:divide-white/5">
               {inkomsten.map((item) => (
                 <div key={item.id} className="flex items-center justify-between px-5 py-3">
-                  <span className="text-sm text-gray-600">{item.naam}</span>
-                  <span className="text-sm font-medium text-gray-900">€ {fmt(item.bedrag)}</span>
+                  <span className="text-sm text-gray-600 dark:text-white/60">{item.naam}</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">€ {fmt(item.bedrag)}</span>
                 </div>
               ))}
             </div>
@@ -78,45 +78,48 @@ export default function OverzichtPage() {
         </div>
 
         {/* Uitgaves */}
-        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
+        <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 overflow-hidden transition-colors duration-200">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50 dark:border-white/5">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-orange-300" />
-              <span className="text-sm font-semibold text-gray-800">Uitgaves</span>
+              <span className="text-sm font-semibold text-gray-800 dark:text-white/80">Uitgaves</span>
             </div>
             <span className="text-sm font-bold text-orange-500">− € {fmt(totaalUitgaves)}</span>
           </div>
           {uitgaves.length === 0 ? (
-            <p className="text-sm text-gray-300 text-center py-6">Geen uitgaves toegevoegd.</p>
+            <p className="text-sm text-gray-300 dark:text-white/20 text-center py-6">Geen uitgaves toegevoegd.</p>
           ) : (
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-gray-50 dark:divide-white/5">
               {uitgaves.map((item) => (
                 <div key={item.id} className="flex items-center justify-between px-5 py-3">
-                  <span className="text-sm text-gray-600">{item.naam}</span>
-                  <span className="text-sm font-medium text-gray-900">€ {fmt(item.bedrag)}</span>
+                  <span className="text-sm text-gray-600 dark:text-white/60">{item.naam}</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">€ {fmt(item.bedrag)}</span>
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        {/* Divider line */}
-        <div className="border-t-2 border-dashed border-gray-200 mx-1" />
+        <div className="border-t-2 border-dashed border-gray-200 dark:border-white/10 mx-1" />
 
         {/* Balance */}
-        <div className={`rounded-2xl p-5 ${over >= 0 ? "bg-[#f0faf4] border border-[#52b788]/30" : "bg-red-50 border border-red-200"}`}>
+        <div className={`rounded-2xl p-5 transition-colors duration-200 ${
+          over >= 0
+            ? "bg-[#f0faf4] dark:bg-[#52b788]/5 border border-[#52b788]/30 dark:border-[#52b788]/20"
+            : "bg-red-50 dark:bg-red-500/5 border border-red-200 dark:border-red-500/20"
+        }`}>
           <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-semibold text-gray-600">Wat je overhoudt</p>
-            <p className={`text-2xl font-bold ${over >= 0 ? "text-[#2d6a4f]" : "text-red-500"}`}>
+            <p className="text-sm font-semibold text-gray-600 dark:text-white/60">Wat je overhoudt</p>
+            <p className={`text-2xl font-bold ${over >= 0 ? "text-[#2d6a4f] dark:text-[#52b788]" : "text-red-500"}`}>
               {over >= 0 ? "+" : "−"} € {fmt(Math.abs(over))}
             </p>
           </div>
           <div>
-            <div className="flex justify-between text-xs text-gray-400 mb-1.5">
+            <div className="flex justify-between text-xs text-gray-400 dark:text-white/30 mb-1.5">
               <span>{uitPct.toFixed(0)}% van inkomen uitgegeven</span>
               <span>{(100 - uitPct).toFixed(0)}% over</span>
             </div>
-            <div className="h-2.5 bg-white/70 rounded-full overflow-hidden">
+            <div className="h-2.5 bg-white/70 dark:bg-white/10 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${uitPct > 90 ? "bg-red-400" : uitPct > 70 ? "bg-orange-400" : "bg-[#52b788]"}`}
                 style={{ width: `${uitPct}%` }}
