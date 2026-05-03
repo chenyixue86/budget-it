@@ -64,7 +64,7 @@ export default function InstellingenPage() {
     <>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Instellingen</h1>
-        <p className="text-gray-400 dark:text-white/40 mt-1 text-sm">Beheer je account gegevens.</p>
+        <p className="text-gray-600 dark:text-white/60 mt-1 text-sm">Beheer je account gegevens.</p>
       </div>
 
       <div className="max-w-lg space-y-5">
@@ -83,7 +83,7 @@ export default function InstellingenPage() {
           <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">E-mailadres wijzigen</h3>
           <form onSubmit={handleEmail} className="space-y-3">
             <div>
-              <label className="block text-xs text-gray-400 dark:text-white/40 mb-1.5">Nieuw e-mailadres</label>
+              <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">Nieuw e-mailadres</label>
               <input
                 type="email"
                 value={newEmail}
@@ -94,7 +94,7 @@ export default function InstellingenPage() {
               />
             </div>
             {emailMsg && (
-              <p className={`text-xs px-3 py-2 rounded-lg ${emailMsg.ok ? "bg-green-50 dark:bg-green-400/10 text-green-600 dark:text-green-400" : "bg-red-50 dark:bg-red-400/10 text-red-500 dark:text-red-400"}`}>
+              <p className={`text-sm px-3 py-2 rounded-lg ${emailMsg.ok ? "bg-green-50 dark:bg-green-400/10 text-green-600 dark:text-green-400" : "bg-red-50 dark:bg-red-400/10 text-red-500 dark:text-red-400"}`}>
                 {emailMsg.text}
               </p>
             )}
@@ -112,7 +112,7 @@ export default function InstellingenPage() {
           <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">Wachtwoord wijzigen</h3>
           <form onSubmit={handlePassword} className="space-y-3">
             <div>
-              <label className="block text-xs text-gray-400 dark:text-white/40 mb-1.5">Nieuw wachtwoord</label>
+              <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">Nieuw wachtwoord</label>
               <input
                 type="password"
                 value={newPassword}
@@ -124,7 +124,7 @@ export default function InstellingenPage() {
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-400 dark:text-white/40 mb-1.5">Bevestig wachtwoord</label>
+              <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">Bevestig wachtwoord</label>
               <input
                 type="password"
                 value={confirmPassword}
@@ -135,7 +135,7 @@ export default function InstellingenPage() {
               />
             </div>
             {passwordMsg && (
-              <p className={`text-xs px-3 py-2 rounded-lg ${passwordMsg.ok ? "bg-green-50 dark:bg-green-400/10 text-green-600 dark:text-green-400" : "bg-red-50 dark:bg-red-400/10 text-red-500 dark:text-red-400"}`}>
+              <p className={`text-sm px-3 py-2 rounded-lg ${passwordMsg.ok ? "bg-green-50 dark:bg-green-400/10 text-green-600 dark:text-green-400" : "bg-red-50 dark:bg-red-400/10 text-red-500 dark:text-red-400"}`}>
                 {passwordMsg.text}
               </p>
             )}

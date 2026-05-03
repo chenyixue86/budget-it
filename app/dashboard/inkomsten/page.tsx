@@ -57,11 +57,11 @@ export default function InkomstenPage() {
     <>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Inkomsten</h1>
-        <p className="text-gray-400 dark:text-white/40 mt-1 text-sm">Voeg je maandelijkse inkomensbronnen toe.</p>
+        <p className="text-gray-600 dark:text-white/60 mt-1 text-sm">Voeg je maandelijkse inkomensbronnen toe.</p>
       </div>
 
       <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 mb-6 transition-colors duration-200">
-        <p className="text-sm text-gray-400 dark:text-white/40 mb-1">Totaal per maand</p>
+        <p className="text-sm text-gray-600 dark:text-white/60 mb-1">Totaal per maand</p>
         <p className="text-4xl font-bold text-gray-900 dark:text-white">
           € {totaal.toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </p>
@@ -72,7 +72,7 @@ export default function InkomstenPage() {
           <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">Inkomen toevoegen</h3>
           <form onSubmit={add} className="space-y-3">
             <div>
-              <label className="block text-xs text-gray-400 dark:text-white/40 mb-1.5">Omschrijving</label>
+              <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">Omschrijving</label>
               <input
                 type="text"
                 value={naam}
@@ -83,7 +83,7 @@ export default function InkomstenPage() {
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-400 dark:text-white/40 mb-1.5">Bedrag per maand (€)</label>
+              <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">Bedrag per maand (€)</label>
               <input
                 type="number"
                 value={bedrag}
@@ -108,7 +108,7 @@ export default function InkomstenPage() {
         <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
           <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">Inkomensbronnen</h3>
           {items.length === 0 ? (
-            <p className="text-sm text-gray-300 dark:text-white/20 text-center py-8">Nog geen inkomsten toegevoegd.</p>
+            <p className="text-sm text-gray-500 dark:text-white/50 text-center py-8">Nog geen inkomsten toegevoegd.</p>
           ) : (
             <div className="space-y-2">
               {items.map((item) => (
@@ -120,7 +120,7 @@ export default function InkomstenPage() {
                     </span>
                     <button
                       onClick={() => remove(item.id)}
-                      className="text-gray-300 dark:text-white/20 hover:text-red-400 transition-colors"
+                      className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors"
                       aria-label="Verwijder"
                     >
                       <TrashIcon />

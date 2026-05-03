@@ -40,7 +40,7 @@ export default function OverzichtPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-gray-400 dark:text-white/40 text-sm">Laden...</p>
+        <p className="text-gray-600 dark:text-white/60 text-sm">Laden...</p>
       </div>
     );
   }
@@ -64,7 +64,7 @@ export default function OverzichtPage() {
             <span className="text-sm font-bold text-[#2d6a4f] dark:text-[#52b788]">+ € {fmt(totaalInkomsten)}</span>
           </div>
           {inkomsten.length === 0 ? (
-            <p className="text-sm text-gray-300 dark:text-white/20 text-center py-6">Geen inkomsten toegevoegd.</p>
+            <p className="text-sm text-gray-500 dark:text-white/50 text-center py-6">Geen inkomsten toegevoegd.</p>
           ) : (
             <div className="divide-y divide-gray-50 dark:divide-white/5">
               {inkomsten.map((item) => (
@@ -87,7 +87,7 @@ export default function OverzichtPage() {
             <span className="text-sm font-bold text-orange-500">− € {fmt(totaalUitgaves)}</span>
           </div>
           {uitgaves.length === 0 ? (
-            <p className="text-sm text-gray-300 dark:text-white/20 text-center py-6">Geen uitgaves toegevoegd.</p>
+            <p className="text-sm text-gray-500 dark:text-white/50 text-center py-6">Geen uitgaves toegevoegd.</p>
           ) : (
             <div className="divide-y divide-gray-50 dark:divide-white/5">
               {uitgaves.map((item) => (
@@ -115,7 +115,7 @@ export default function OverzichtPage() {
             </p>
           </div>
           <div>
-            <div className="flex justify-between text-xs text-gray-400 dark:text-white/30 mb-1.5">
+            <div className="flex justify-between text-xs text-gray-600 dark:text-white/60 mb-1.5">
               <span>{uitPct.toFixed(0)}% van inkomen uitgegeven</span>
               <span>{(100 - uitPct).toFixed(0)}% over</span>
             </div>

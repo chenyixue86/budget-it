@@ -29,11 +29,11 @@ export default function DashboardHeader() {
 
   return (
     <header className="h-14 bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-white/10 flex items-center justify-between px-8 shrink-0 transition-colors duration-200">
-      <span className="text-sm text-gray-400 dark:text-white/40">{LABELS[pathname] ?? "Dashboard"}</span>
+      <span className="text-sm text-gray-600 dark:text-white/60">{LABELS[pathname] ?? "Dashboard"}</span>
       <div className="flex items-center gap-3">
         <button
           onClick={toggle}
-          className="text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/70 transition-colors"
+          className="text-gray-500 dark:text-white/60 hover:text-gray-800 dark:hover:text-white/80 transition-colors"
           aria-label="Toggle dark mode"
         >
           {dark ? <SunIcon /> : <MoonIcon />}

@@ -34,7 +34,7 @@ export default function SidebarNav() {
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                 active
                   ? "bg-[#f0faf4] dark:bg-[#52b788]/10 text-[#2d6a4f] dark:text-[#52b788] font-medium"
-                  : "text-gray-500 dark:text-white/40 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-800 dark:hover:text-white/80"
+                  : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white/90"
               }`}
             >
               <Icon active={active} />

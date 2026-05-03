@@ -16,7 +16,7 @@ export default function SignOutButton() {
   return (
     <button
       onClick={handleSignOut}
-      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 dark:text-white/30 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-700 dark:hover:text-white/60 transition-colors"
+      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white/90 transition-colors"
     >
       <SignOutIcon />
       Uitloggen

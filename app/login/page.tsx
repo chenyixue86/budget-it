@@ -39,13 +39,13 @@ export default function LoginPage() {
           <Link href="/" className="text-2xl font-bold tracking-tight text-white">
             budget<span className="text-green-400">-it</span>
           </Link>
-          <p className="text-white/40 text-sm mt-2">Inloggen bij je account</p>
+          <p className="text-white/65 text-sm mt-2">Inloggen bij je account</p>
         </div>
 
         <div className="bg-[#111111] border border-white/8 rounded-2xl p-8">
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs text-white/40 mb-2">E-mail</label>
+              <label className="block text-sm text-white/70 mb-2">E-mail</label>
               <input
                 type="email"
                 required
@@ -57,7 +57,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs text-white/40 mb-2">Wachtwoord</label>
+              <label className="block text-sm text-white/70 mb-2">Wachtwoord</label>
               <input
                 type="password"
                 required
@@ -84,7 +84,7 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p className="text-center text-white/30 text-sm mt-6">
+        <p className="text-center text-white/55 text-sm mt-6">
           Nog geen account?{" "}
           <a href="/register" className="text-green-400 hover:text-green-300 transition-colors">
             Registreer hier

@@ -5,8 +5,8 @@ export default function BugReportForm() {
     <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs text-gray-400 dark:text-white/40 mb-2">
-            Naam <span className="text-gray-300 dark:text-white/20">(optioneel)</span>
+          <label className="block text-sm text-gray-700 dark:text-white/70 mb-2">
+            Naam <span className="text-gray-400 dark:text-white/40">(optioneel)</span>
           </label>
           <input
             type="text"
@@ -15,8 +15,8 @@ export default function BugReportForm() {
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-400 dark:text-white/40 mb-2">
-            Email <span className="text-gray-300 dark:text-white/20">(optioneel)</span>
+          <label className="block text-sm text-gray-700 dark:text-white/70 mb-2">
+            Email <span className="text-gray-400 dark:text-white/40">(optioneel)</span>
           </label>
           <input
             type="email"
@@ -27,7 +27,7 @@ export default function BugReportForm() {
       </div>
 
       <div>
-        <label className="block text-xs text-gray-400 dark:text-white/40 mb-2">Wat ging er mis?</label>
+        <label className="block text-sm text-gray-700 dark:text-white/70 mb-2">Wat ging er mis?</label>
         <textarea
           rows={5}
           placeholder="Beschrijf de bug of je feedback. Wat deed je, wat verwachtte je, wat gebeurde er?"

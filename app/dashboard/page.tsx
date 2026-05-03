@@ -42,7 +42,7 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Hallo{userName ? `, ${userName}` : ""} 👋
           </h1>
-          <p className="text-gray-400 dark:text-white/40 mt-1 text-sm">Welkom bij je budget overzicht.</p>
+          <p className="text-gray-600 dark:text-white/60 mt-1 text-sm">Welkom bij je budget overzicht.</p>
         </div>
         <div className="flex items-center gap-1 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl p-1">
           {MONTHS.map((m) => (
@@ -52,7 +52,7 @@ export default function Dashboard() {
               className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
                 activeMonth === m
                   ? "bg-[#2d6a4f] text-white"
-                  : "text-gray-400 dark:text-white/30 hover:text-gray-700 dark:hover:text-white/60"
+                  : "text-gray-500 dark:text-white/50 hover:text-gray-800 dark:hover:text-white/80"
               }`}
             >
               {m}
@@ -80,7 +80,7 @@ function StatCard({ label, value, sub, trend, positive }: {
 }) {
   return (
     <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
-      <div className="text-gray-400 dark:text-white/40 text-sm mb-4">{label}</div>
+      <div className="text-gray-600 dark:text-white/60 text-sm mb-4">{label}</div>
       <p className="text-3xl font-bold text-gray-900 dark:text-white mb-3">{value}</p>
       <div className="flex items-center gap-2">
         <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${
@@ -90,7 +90,7 @@ function StatCard({ label, value, sub, trend, positive }: {
         }`}>
           {positive ? "↑" : "→"} {trend}
         </span>
-        <span className="text-gray-400 dark:text-white/30 text-xs">{sub}</span>
+        <span className="text-gray-500 dark:text-white/50 text-xs">{sub}</span>
       </div>
     </div>
   );
@@ -102,12 +102,12 @@ function UitgavesCard({ items }: { items: UitgaveItem[] }) {
     <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm">Uitgaves deze maand</h3>
-        <span className="text-xs text-gray-400 dark:text-white/30">
+        <span className="text-xs text-gray-500 dark:text-white/50">
           Totaal: € {totaal.toLocaleString("nl-NL", { minimumFractionDigits: 0 })}
         </span>
       </div>
       {items.length === 0 ? (
-        <p className="text-sm text-gray-300 dark:text-white/20 text-center py-8">Nog geen uitgaves toegevoegd.</p>
+        <p className="text-sm text-gray-500 dark:text-white/50 text-center py-8">Nog geen uitgaves toegevoegd.</p>
       ) : (
         <div className="space-y-3">
           {items.map((item) => {
@@ -120,7 +120,7 @@ function UitgavesCard({ items }: { items: UitgaveItem[] }) {
                     <span className="text-gray-800 dark:text-white/80 font-medium">
                       € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 0 })}
                     </span>
-                    <span className="text-xs text-gray-400 dark:text-white/30 w-8 text-right">{pct}%</span>
+                    <span className="text-xs text-gray-500 dark:text-white/50 w-8 text-right">{pct}%</span>
                   </div>
                 </div>
                 <div className="h-1.5 bg-gray-100 dark:bg-white/10 rounded-full overflow-hidden">
@@ -181,7 +181,7 @@ function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; 
             )}
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-xs text-gray-400 dark:text-white/30 text-center leading-tight">
+            <span className="text-xs text-gray-600 dark:text-white/60 text-center leading-tight">
               {noData ? "—" : `${uitgaves.length} posten`}
             </span>
           </div>
@@ -189,13 +189,13 @@ function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; 
 
         <div className="space-y-2.5 flex-1">
           {noData ? (
-            <p className="text-sm text-gray-300 dark:text-white/20">Voeg inkomsten en uitgaves toe.</p>
+            <p className="text-sm text-gray-500 dark:text-white/50">Voeg inkomsten en uitgaves toe.</p>
           ) : (
             segmentsWithStart.map((seg, i) => (
               <div key={i} className="flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: seg.color }} />
-                  <span className="text-sm text-gray-500 dark:text-white/50 truncate">{seg.naam}</span>
+                  <span className="text-sm text-gray-700 dark:text-white/70 truncate">{seg.naam}</span>
                 </div>
                 <span className="text-sm font-medium text-gray-700 dark:text-white/70 ml-2 shrink-0">
                   {seg.pct.toFixed(0)}%

@@ -30,7 +30,7 @@ export default function ComparisonSection() {
               Ga lean en bespaar<br />
               <span className="text-green-500 dark:text-green-400">op je budgetapp.</span>
             </h2>
-            <p className="text-gray-500 dark:text-white/50 text-base leading-relaxed mb-8 max-w-md">
+            <p className="text-gray-600 dark:text-white/65 text-base leading-relaxed mb-8 max-w-md">
               Andere budgetapps rekenen je voor elke feature apart. Bij budget-it betaal je niets — nooit. Geen abonnement, geen verborgen kosten.
             </p>
 
@@ -42,7 +42,7 @@ export default function ComparisonSection() {
                   </span>
                   <span className="font-semibold text-gray-900 dark:text-white text-sm">100% gratis</span>
                 </div>
-                <p className="text-gray-400 dark:text-white/40 text-sm pl-6">Alle features, altijd, voor iedereen.</p>
+                <p className="text-gray-600 dark:text-white/60 text-sm pl-6">Alle features, altijd, voor iedereen.</p>
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
@@ -51,7 +51,7 @@ export default function ComparisonSection() {
                   </span>
                   <span className="font-semibold text-gray-900 dark:text-white text-sm">Geen creditcard nodig</span>
                 </div>
-                <p className="text-gray-400 dark:text-white/40 text-sm pl-6">Gewoon registreren en beginnen.</p>
+                <p className="text-gray-600 dark:text-white/60 text-sm pl-6">Gewoon registreren en beginnen.</p>
               </div>
             </div>
           </div>
@@ -65,7 +65,7 @@ export default function ComparisonSection() {
                 className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   isBudgetit
                     ? "bg-[#2d6a4f] text-white shadow-sm"
-                    : "text-gray-400 dark:text-white/30 hover:text-gray-600 dark:hover:text-white/50"
+                    : "text-gray-500 dark:text-white/50 hover:text-gray-700 dark:hover:text-white/70"
                 }`}
               >
                 budget-it
@@ -75,7 +75,7 @@ export default function ComparisonSection() {
                 className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   !isBudgetit
                     ? "bg-[#7c2d12] text-white shadow-sm"
-                    : "text-gray-400 dark:text-white/30 hover:text-gray-600 dark:hover:text-white/50"
+                    : "text-gray-500 dark:text-white/50 hover:text-gray-700 dark:hover:text-white/70"
                 }`}
               >
                 Andere apps
@@ -86,8 +86,8 @@ export default function ComparisonSection() {
             <div className="bg-white dark:bg-[#0f0f0f] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5">
               {/* Header */}
               <div className="grid grid-cols-2 border-b-2 border-green-500/60 dark:border-green-400/40 px-5 py-3 bg-gray-50 dark:bg-white/3">
-                <span className="text-xs font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wide">Feature</span>
-                <span className="text-xs font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wide">
+                <span className="text-xs font-semibold text-gray-600 dark:text-white/60 uppercase tracking-wide">Feature</span>
+                <span className="text-xs font-semibold text-gray-600 dark:text-white/60 uppercase tracking-wide">
                   {isBudgetit ? "Kosten bij budget-it" : "Kosten bij anderen"}
                 </span>
               </div>
@@ -96,7 +96,7 @@ export default function ComparisonSection() {
               <div className="divide-y divide-gray-50 dark:divide-white/5">
                 {FEATURES.map((f) => (
                   <div key={f.label} className="grid grid-cols-2 px-5 py-3.5 hover:bg-gray-50/60 dark:hover:bg-white/3 transition-colors">
-                    <span className="text-sm text-gray-600 dark:text-white/60">{f.label}</span>
+                    <span className="text-sm text-gray-700 dark:text-white/70">{f.label}</span>
                     <span className={`text-sm font-medium ${
                       isBudgetit
                         ? "text-green-600 dark:text-green-400"

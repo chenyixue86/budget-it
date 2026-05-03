@@ -11,7 +11,7 @@ export default function LandingNavbar() {
         <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
           budget<span className="text-green-500 dark:text-green-400">-it</span>
         </span>
-        <div className="hidden md:flex items-center gap-8 text-sm text-gray-500 dark:text-white/60">
+        <div className="hidden md:flex items-center gap-8 text-sm text-gray-700 dark:text-white/70">
           <a href="#features" className="hover:text-gray-900 dark:hover:text-white transition-colors">Features</a>
           <a href="#how-it-works" className="hover:text-gray-900 dark:hover:text-white transition-colors">Hoe het werkt</a>
         </div>

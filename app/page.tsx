@@ -31,7 +31,7 @@ function Hero() {
         <span className="text-green-500 dark:text-green-400">onder controle.</span>
       </h1>
 
-      <p className="hero-sub text-gray-500 dark:text-white/50 text-lg md:text-xl max-w-xl mb-10 leading-relaxed">
+      <p className="hero-sub text-gray-600 dark:text-white/65 text-lg md:text-xl max-w-xl mb-10 leading-relaxed">
         Voer je inkomsten, uitgaves en vaste lasten in.
         budget-it berekent alles automatisch en geeft je een helder overzicht.
       </p>
@@ -182,7 +182,7 @@ function Features() {
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
             Alles wat je nodig hebt
           </h2>
-          <p className="text-gray-400 dark:text-white/40 mt-4 max-w-lg mx-auto">
+          <p className="text-gray-600 dark:text-white/60 mt-4 max-w-lg mx-auto">
             Simpel, snel en overzichtelijk. Geen gedoe, geen verborgen kosten.
           </p>
         </div>
@@ -195,7 +195,7 @@ function Features() {
             >
               <div className="text-3xl mb-4">{item.icon}</div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{item.title}</h3>
-              <p className="text-gray-400 dark:text-white/40 text-sm leading-relaxed">{item.desc}</p>
+              <p className="text-gray-600 dark:text-white/60 text-sm leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -228,7 +228,7 @@ function HowItWorks() {
                 {step.num}
               </div>
               <h3 className="font-semibold text-xl mb-3 text-gray-900 dark:text-white">{step.title}</h3>
-              <p className="text-gray-400 dark:text-white/40 text-sm leading-relaxed max-w-xs">{step.desc}</p>
+              <p className="text-gray-600 dark:text-white/60 text-sm leading-relaxed max-w-xs">{step.desc}</p>
             </div>
           ))}
         </div>
@@ -246,7 +246,7 @@ function BugReport() {
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-2 text-gray-900 dark:text-white">
             Bug gevonden?
           </h2>
-          <p className="text-gray-400 dark:text-white/40 text-sm leading-relaxed">
+          <p className="text-gray-600 dark:text-white/60 text-sm leading-relaxed">
             Dit is een persoonlijk project. Zie je iets niet kloppen of heb je een suggestie? Laat het weten.
           </p>
         </div>
@@ -263,10 +263,10 @@ function Footer() {
         <span className="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
           budget<span className="text-green-500 dark:text-green-400">-it</span>
         </span>
-        <p className="text-gray-400 dark:text-white/30 text-sm">
+        <p className="text-gray-500 dark:text-white/50 text-sm">
           Gemaakt voor iedereen die grip wil op hun geld.
         </p>
-        <p className="text-gray-300 dark:text-white/20 text-xs">© 2025 budget-it</p>
+        <p className="text-gray-400 dark:text-white/40 text-xs">© 2025 budget-it</p>
       </div>
     </footer>
   );
