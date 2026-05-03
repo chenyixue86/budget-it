@@ -3,29 +3,73 @@
 import { useEffect, useRef } from "react";
 
 export default function DashboardMockup() {
-  const innerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const stat1Ref = useRef<HTMLDivElement>(null); // Inkomsten
+  const stat2Ref = useRef<HTMLDivElement>(null); // Vaste Lasten
+  const stat3Ref = useRef<HTMLDivElement>(null); // Vrij besteedbaar
+  const chart1Ref = useRef<HTMLDivElement>(null); // Uitgaves bars
+  const chart2Ref = useRef<HTMLDivElement>(null); // Budget pie
 
   useEffect(() => {
     const update = () => {
-      if (!innerRef.current) return;
-      const progress = Math.min(window.scrollY / 500, 1);
-      const rotateX = 18 * (1 - progress);
-      const scale = 0.92 + 0.08 * progress;
-      innerRef.current.style.transform = `rotateX(${rotateX}deg) scale(${scale})`;
+      const scrollY = window.scrollY;
+
+      // Overall container: tilt from 22deg → 0deg over 600px scroll
+      if (wrapperRef.current) {
+        const progress = Math.min(scrollY / 600, 1);
+        const rotateX = 22 * (1 - progress);
+        const scale = 0.88 + 0.12 * progress;
+        const shadowY = 60 - 30 * progress;
+        const shadowBlur = 120 - 50 * progress;
+        const shadowOpacity = 0.2 - 0.1 * progress;
+        wrapperRef.current.style.transform = `rotateX(${rotateX}deg) scale(${scale})`;
+        wrapperRef.current.style.boxShadow = `0 ${shadowY}px ${shadowBlur}px -20px rgba(0,0,0,${shadowOpacity})`;
+      }
+
+      // Individual cards: staggered parallax — each at a different speed
+      // Negative = moves up (toward viewer in rotated space), positive = lags behind
+      const s = Math.min(scrollY, 600);
+      if (stat1Ref.current)  stat1Ref.current.style.transform  = `translateY(${-s * 0.07}px)`;
+      if (stat2Ref.current)  stat2Ref.current.style.transform  = `translateY(${-s * 0.03}px)`;
+      if (stat3Ref.current)  stat3Ref.current.style.transform  = `translateY(${-s * 0.09}px)`;
+      if (chart1Ref.current) chart1Ref.current.style.transform = `translateY(${-s * 0.04}px)`;
+      if (chart2Ref.current) chart2Ref.current.style.transform = `translateY(${-s * 0.11}px)`;
     };
+
     window.addEventListener("scroll", update, { passive: true });
     update();
     return () => window.removeEventListener("scroll", update);
   }, []);
 
   return (
-    <div className="hero-mockup mt-20 w-full max-w-5xl mx-auto px-4" style={{ perspective: "1200px" }}>
+    <div className="mt-16 w-full max-w-5xl mx-auto px-4" style={{ perspective: "1400px", perspectiveOrigin: "50% 0%" }}>
+      {/* Device frame */}
       <div
-        ref={innerRef}
-        className="rounded-2xl overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] dark:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.7)] border border-gray-200 dark:border-white/10"
-        style={{ transformOrigin: "center top", willChange: "transform" }}
+        ref={wrapperRef}
+        className="rounded-2xl overflow-hidden border border-gray-200/80 dark:border-white/10"
+        style={{
+          transformOrigin: "center top",
+          willChange: "transform",
+          background: "#e8e9eb",
+        }}
       >
-        <div className="flex bg-[#f5f6f8]" style={{ minHeight: "420px" }}>
+        {/* Browser chrome bar */}
+        <div className="flex items-center gap-2 px-4 h-10 bg-[#e8e9eb] shrink-0">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+            <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
+            <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+          </div>
+          <div className="flex-1 mx-3">
+            <div className="bg-white/60 rounded-md h-5 max-w-xs mx-auto flex items-center justify-center">
+              <span className="text-[10px] text-gray-400 font-medium">budget-it.vercel.app/dashboard</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Dashboard content */}
+        <div className="flex bg-[#f5f6f8]" style={{ minHeight: "440px" }}>
+          {/* Sidebar */}
           <div className="w-44 bg-white border-r border-gray-100 flex flex-col py-4 shrink-0">
             <div className="px-4 mb-5">
               <span className="text-sm font-bold text-gray-900">budget<span className="text-[#52b788]">-it</span></span>
@@ -49,6 +93,7 @@ export default function DashboardMockup() {
             ))}
           </div>
 
+          {/* Main */}
           <div className="flex-1 flex flex-col overflow-hidden">
             <div className="h-10 bg-white border-b border-gray-100 flex items-center justify-between px-5">
               <span className="text-xs text-gray-400">Home</span>
@@ -71,22 +116,28 @@ export default function DashboardMockup() {
                 </div>
               </div>
 
+              {/* Stat cards — each with its own ref for staggered parallax */}
               <div className="grid grid-cols-3 gap-3 mb-4">
-                {[
-                  { label: "Inkomsten", value: "€ 3.200", trend: "+5.2%", color: "text-green-600", bg: "bg-green-50" },
-                  { label: "Vaste Lasten", value: "€ 1.450", trend: "45.3%", color: "text-orange-500", bg: "bg-orange-50" },
-                  { label: "Vrij besteedbaar", value: "€ 1.750", trend: "54.7%", color: "text-blue-500", bg: "bg-blue-50" },
-                ].map((c) => (
-                  <div key={c.label} className="bg-white rounded-xl border border-gray-100 p-3">
-                    <p className="text-[10px] text-gray-400 mb-1">{c.label}</p>
-                    <p className="text-base font-bold text-gray-900 mb-1.5">{c.value}</p>
-                    <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full ${c.bg} ${c.color}`}>↑ {c.trend}</span>
-                  </div>
-                ))}
+                <div ref={stat1Ref} className="bg-white rounded-xl border border-gray-100 p-3" style={{ willChange: "transform" }}>
+                  <p className="text-[10px] text-gray-400 mb-1">Inkomsten</p>
+                  <p className="text-base font-bold text-gray-900 mb-1.5">€ 3.200</p>
+                  <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-green-50 text-green-600">↑ +5.2%</span>
+                </div>
+                <div ref={stat2Ref} className="bg-white rounded-xl border border-gray-100 p-3" style={{ willChange: "transform" }}>
+                  <p className="text-[10px] text-gray-400 mb-1">Vaste Lasten</p>
+                  <p className="text-base font-bold text-gray-900 mb-1.5">€ 1.450</p>
+                  <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-orange-50 text-orange-500">↑ 45.3%</span>
+                </div>
+                <div ref={stat3Ref} className="bg-white rounded-xl border border-gray-100 p-3" style={{ willChange: "transform" }}>
+                  <p className="text-[10px] text-gray-400 mb-1">Vrij besteedbaar</p>
+                  <p className="text-base font-bold text-gray-900 mb-1.5">€ 1.750</p>
+                  <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-500">↑ 54.7%</span>
+                </div>
               </div>
 
+              {/* Chart cards — also staggered */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-white rounded-xl border border-gray-100 p-3">
+                <div ref={chart1Ref} className="bg-white rounded-xl border border-gray-100 p-3" style={{ willChange: "transform" }}>
                   <p className="text-[10px] font-semibold text-gray-700 mb-2">Uitgaves deze maand</p>
                   {[
                     { label: "Boodschappen", pct: 78 },
@@ -105,7 +156,7 @@ export default function DashboardMockup() {
                   ))}
                 </div>
 
-                <div className="bg-white rounded-xl border border-gray-100 p-3">
+                <div ref={chart2Ref} className="bg-white rounded-xl border border-gray-100 p-3" style={{ willChange: "transform" }}>
                   <p className="text-[10px] font-semibold text-gray-700 mb-2">Budget verdeling</p>
                   <div className="flex items-center gap-3">
                     <svg width="64" height="64" viewBox="0 0 64 64">
