@@ -27,7 +27,7 @@ export default function LandingNavbar() {
             href="/register"
             className="btn-primary text-black text-sm font-semibold px-4 py-2 rounded-lg"
           >
-            Start gratis
+            Login
           </a>
         </div>
       </div>

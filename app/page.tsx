@@ -37,10 +37,10 @@ function Hero() {
 
       <div className="hero-cta flex flex-col sm:flex-row gap-3">
         <a
-          href="/register"
+          href="/login"
           className="btn-primary text-black font-semibold px-7 py-3.5 rounded-xl text-sm"
         >
-          Begin nu →
+          Login →
         </a>
         <a
           href="#how-it-works"
