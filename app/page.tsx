@@ -7,7 +7,6 @@ export default function Home() {
     <main className="flex flex-col min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white transition-colors duration-200">
       <LandingNavbar />
       <Hero />
-      <Features />
       <HowItWorks />
       <ComparisonSection />
       <BugReport />
@@ -162,44 +161,6 @@ function Hero() {
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-[#0a0a0a] to-transparent pointer-events-none" />
-    </section>
-  );
-}
-
-function Features() {
-  const items = [
-    { icon: "💰", title: "Inkomsten", desc: "Voeg al je inkomensbronnen toe. Salaris, freelance, bijbaan — alles op één plek." },
-    { icon: "💸", title: "Uitgaves", desc: "Registreer je variabele kosten per maand. Boodschappen, uit eten, kleding." },
-    { icon: "🏠", title: "Vaste Lasten", desc: "Huur, verzekeringen, abonnementen. De vaste posten die elke maand terugkomen." },
-    { icon: "📊", title: "Overzicht", desc: "Zie in één oogopslag hoeveel je overhoudt en waar je geld naartoe gaat." },
-  ];
-
-  return (
-    <section id="features" className="py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-14">
-          <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">Features</p>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Alles wat je nodig hebt
-          </h2>
-          <p className="text-gray-600 dark:text-white/60 mt-4 max-w-lg mx-auto">
-            Simpel, snel en overzichtelijk. Geen gedoe, geen verborgen kosten.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {items.map((item) => (
-            <div
-              key={item.title}
-              className="feature-card bg-gray-50 dark:bg-[#111111] border border-gray-100 dark:border-white/5 rounded-2xl p-6 hover:border-green-500/20 dark:hover:border-green-400/20"
-            >
-              <div className="text-3xl mb-4">{item.icon}</div>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{item.title}</h3>
-              <p className="text-gray-600 dark:text-white/60 text-sm leading-relaxed">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
     </section>
   );
 }
