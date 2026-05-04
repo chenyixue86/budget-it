@@ -5,12 +5,12 @@ import { usePathname } from "next/navigation";
 import SignOutButton from "@/app/components/SignOutButton";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", label: "Home", Icon: HomeIcon },
-  { href: "/dashboard/inkomsten", label: "Inkomsten", Icon: InkomenIcon },
-  { href: "/dashboard/uitgaves", label: "Uitgaves", Icon: UitgavesIcon },
-  { href: "/dashboard/vaste-lasten", label: "Vaste Lasten", Icon: VasteLastenIcon },
-  { href: "/dashboard/overzicht", label: "Overzicht", Icon: OverzichtIcon },
-  { href: "/dashboard/instellingen", label: "Instellingen", Icon: InstellingenIcon },
+  { href: "/dashboard", label: "Home", Icon: HomeIcon, comingSoon: false },
+  { href: "/dashboard/inkomsten", label: "Inkomsten", Icon: InkomenIcon, comingSoon: false },
+  { href: "/dashboard/uitgaves", label: "Uitgaves", Icon: UitgavesIcon, comingSoon: false },
+  { href: "/dashboard/vaste-lasten", label: "Vaste Lasten", Icon: VasteLastenIcon, comingSoon: true },
+  { href: "/dashboard/overzicht", label: "Overzicht", Icon: OverzichtIcon, comingSoon: false },
+  { href: "/dashboard/instellingen", label: "Instellingen", Icon: InstellingenIcon, comingSoon: false },
 ];
 
 export default function SidebarNav() {
@@ -25,8 +25,20 @@ export default function SidebarNav() {
       </div>
 
       <nav className="flex-1 px-3 space-y-0.5">
-        {NAV_ITEMS.map(({ href, label, Icon }) => {
+        {NAV_ITEMS.map(({ href, label, Icon, comingSoon }) => {
           const active = pathname === href;
+          if (comingSoon) {
+            return (
+              <div
+                key={href}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 dark:text-white/30 cursor-not-allowed select-none"
+              >
+                <Icon active={false} />
+                {label}
+                <span className="ml-auto text-[10px] font-medium text-gray-400 dark:text-white/30">coming soon</span>
+              </div>
+            );
+          }
           return (
             <Link
               key={href}
