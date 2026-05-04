@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import SignOutButton from "@/app/components/SignOutButton";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Home", Icon: HomeIcon, comingSoon: false },
@@ -56,9 +55,6 @@ export default function SidebarNav() {
         })}
       </nav>
 
-      <div className="px-3 mt-4">
-        <SignOutButton />
-      </div>
     </aside>
   );
 }
