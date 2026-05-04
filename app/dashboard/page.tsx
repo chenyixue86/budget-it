@@ -9,10 +9,15 @@ type UitgaveItem = { id: string; naam: string; bedrag: number };
 
 const SEGMENT_COLORS = ["#fca5a5", "#fdba74", "#fde68a", "#93c5fd", "#c4b5fd", "#f9a8d4"];
 
+function fmt(n: number) {
+  return "€ " + n.toLocaleString("nl-NL", { minimumFractionDigits: 0 });
+}
+
 export default function Dashboard() {
   const supabase = createClient();
   const [activeMonth, setActiveMonth] = useState("Apr");
   const [inkomstenTotaal, setInkomstenTotaal] = useState<number | null>(null);
+  const [vasteLastenTotaal, setVasteLastenTotaal] = useState<number | null>(null);
   const [uitgaves, setUitgaves] = useState<UitgaveItem[]>([]);
   const [userName, setUserName] = useState("");
 
@@ -26,14 +31,20 @@ export default function Dashboard() {
       if (data) setInkomstenTotaal(data.reduce((s: number, i: { bedrag: number }) => s + i.bedrag, 0));
     });
 
+    supabase.from("vaste_lasten").select("bedrag").then(({ data }) => {
+      if (data) setVasteLastenTotaal(data.reduce((s: number, i: { bedrag: number }) => s + i.bedrag, 0));
+    });
+
     supabase.from("uitgaves").select("id, naam, bedrag").order("created_at").then(({ data }) => {
       if (data) setUitgaves(data);
     });
   }, [supabase]);
 
-  const inkStr = inkomstenTotaal === null
+  const inkStr = inkomstenTotaal === null ? "..." : fmt(inkomstenTotaal);
+  const vlStr = vasteLastenTotaal === null ? "..." : fmt(vasteLastenTotaal);
+  const vrijStr = inkomstenTotaal === null || vasteLastenTotaal === null
     ? "..."
-    : "€ " + inkomstenTotaal.toLocaleString("nl-NL", { minimumFractionDigits: 0 });
+    : fmt(Math.max(0, inkomstenTotaal - vasteLastenTotaal));
 
   return (
     <>
@@ -63,8 +74,8 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-3 gap-5 mb-6">
         <StatCard label="Inkomsten" value={inkStr} sub="per maand" trend="totaal inkomen" positive />
-        <StatCard label="Vaste Lasten" value="€ —" sub="maandelijks" trend="nog in te vullen" positive={false} />
-        <StatCard label="Vrij besteedbaar" value="€ —" sub="resterend" trend="nog in te vullen" positive />
+        <StatCard label="Vaste Lasten" value={vlStr} sub="maandelijks" trend={vasteLastenTotaal === null ? "laden..." : vasteLastenTotaal === 0 ? "nog in te vullen" : "vaste kosten"} positive={false} />
+        <StatCard label="Vrij besteedbaar" value={vrijStr} sub="resterend" trend={inkomstenTotaal && vasteLastenTotaal ? "na vaste lasten" : "nog in te vullen"} positive />
       </div>
 
       <div className="grid grid-cols-2 gap-5">
