@@ -118,7 +118,6 @@ function Footer() {
           budget<span className="text-green-500 dark:text-green-400">-it</span>
         </span>
         <div className="flex items-center gap-6 md:hidden">
-          <a href="#features" className="text-sm text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white transition-colors">Features</a>
           <a href="#how-it-works" className="text-sm text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white transition-colors">Hoe het werkt</a>
           <a href="/changelog" className="text-sm text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white transition-colors">Changelog</a>
         </div>
