@@ -20,7 +20,7 @@ export default function BugReportForm() {
           </label>
           <input
             type="email"
-            placeholder="kevin@mail.com"
+            placeholder="voorbeeld@email.com"
             className="w-full bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-white/8 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/20 focus:outline-none focus:border-green-500/40 dark:focus:border-green-400/40 transition-colors"
           />
         </div>
