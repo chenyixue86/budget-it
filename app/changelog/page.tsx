@@ -6,7 +6,7 @@ const UPCOMING: { title: string; description: string }[] = [
     description: "Voeg je maandelijkse vaste kosten toe zoals huur, abonnementen en verzekeringen.",
   },
   {
-    title: "Placeholder feature",
+    title: "Categorieën Vaste Lasten",
     description: "Beschrijving komt later.",
   },
 ];
