@@ -23,10 +23,7 @@ const RELEASES: {
     label: "Eerste release",
     changes: [
       { type: "new", text: "Dashboard met inkomsten, uitgaves en vrij besteedbaar overzicht" },
-      { type: "new", text: "Inkomsten pagina met CRUD" },
-      { type: "new", text: "Uitgaves pagina met CRUD" },
       { type: "new", text: "Overzicht pagina met totalen en progress bar" },
-      { type: "new", text: "Instellingen: email en wachtwoord wijzigen" },
       { type: "new", text: "Dark mode" },
     ],
   },
