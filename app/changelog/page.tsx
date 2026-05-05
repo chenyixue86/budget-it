@@ -67,6 +67,7 @@ export default function ChangelogPage() {
         <section className="mb-16">
           <div className="flex items-center gap-3 mb-6">
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Binnenkort</h2>
+            <span className="text-xs font-medium text-gray-400 dark:text-white/30">v0.1.1</span>
             <div className="flex-1 h-px bg-gray-100 dark:bg-white/10" />
           </div>
           <div className="space-y-4">
