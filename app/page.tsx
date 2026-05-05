@@ -18,7 +18,7 @@ export default function Home() {
 
 function Hero() {
   return (
-    <section className="flex flex-col items-center justify-center text-center px-6 pt-40 pb-28 relative overflow-hidden">
+    <section className="flex flex-col items-center justify-center text-center px-6 pt-28 md:pt-40 pb-16 md:pb-28 relative overflow-hidden">
       <div className="hero-blob absolute top-1/3 left-1/2 w-[600px] h-[400px] bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="hero-badge inline-flex items-center gap-2 bg-green-500/10 dark:bg-green-400/10 border border-green-500/20 dark:border-green-400/20 text-green-600 dark:text-green-400 text-xs font-medium px-3 py-1.5 rounded-full mb-8">

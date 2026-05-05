@@ -19,14 +19,19 @@ export default function DashboardMockup() {
   }, []);
 
   return (
-    <div className="hero-mockup mt-20 w-full max-w-5xl mx-auto px-4" style={{ perspective: "1200px" }}>
+    <div
+      className="hero-mockup mt-20 w-full max-w-5xl mx-auto px-4 hidden md:block"
+      style={{ perspective: "1200px" }}
+    >
       <div
         ref={innerRef}
         className="rounded-2xl overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] dark:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.7)] border border-gray-200 dark:border-white/10"
         style={{ transformOrigin: "center top", willChange: "transform" }}
       >
-        <div className="flex bg-[#f5f6f8]" style={{ minHeight: "420px" }}>
-          <div className="w-44 bg-white border-r border-gray-100 flex flex-col py-4 shrink-0">
+        <div className="flex bg-[#f5f6f8]" style={{ height: "420px" }}>
+
+          {/* Sidebar — alleen op lg+ */}
+          <div className="hidden lg:flex w-44 bg-white border-r border-gray-100 flex-col py-4 shrink-0">
             <div className="px-4 mb-5">
               <span className="text-sm font-bold text-gray-900">budget<span className="text-[#52b788]">-it</span></span>
             </div>
@@ -49,8 +54,9 @@ export default function DashboardMockup() {
             ))}
           </div>
 
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <div className="h-10 bg-white border-b border-gray-100 flex items-center justify-between px-5">
+          {/* Main content */}
+          <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+            <div className="h-10 bg-white border-b border-gray-100 flex items-center justify-between px-4 shrink-0">
               <span className="text-xs text-gray-400">Home</span>
               <div className="flex items-center gap-2">
                 <div className="w-5 h-5 rounded-full bg-[#52b788] flex items-center justify-center text-white text-[9px] font-bold">K</div>
@@ -58,34 +64,41 @@ export default function DashboardMockup() {
               </div>
             </div>
 
-            <div className="flex-1 p-5">
-              <div className="flex items-center justify-between mb-4">
+            <div className="flex-1 p-4 overflow-hidden">
+              <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900">Hallo, Kevin 👋</h2>
+                  <h2 className="text-base font-bold text-gray-900">Hallo, Kevin 👋</h2>
                   <p className="text-xs text-gray-400">Welkom bij je budget overzicht.</p>
                 </div>
-                <div className="flex gap-1 bg-white border border-gray-200 rounded-lg p-0.5">
-                  {["Jan","Feb","Mar","Apr","Mei","Jun"].map((m) => (
-                    <div key={m} className={`px-2 py-1 text-[10px] rounded-md font-medium ${m === "Apr" ? "bg-[#2d6a4f] text-white" : "text-gray-400"}`}>{m}</div>
+                <div className="flex gap-0.5 bg-white border border-gray-200 rounded-lg p-0.5">
+                  {["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"].map((m) => (
+                    <div
+                      key={m}
+                      className={`px-1.5 py-1 text-[9px] rounded-md font-medium ${
+                        m === "Apr" ? "bg-[#2d6a4f] text-white" : "text-gray-400"
+                      }`}
+                    >
+                      {m}
+                    </div>
                   ))}
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3 mb-4">
+              <div className="grid grid-cols-3 gap-2 mb-3">
                 {[
                   { label: "Inkomsten", value: "€ 3.200", trend: "+5.2%", color: "text-green-600", bg: "bg-green-50" },
                   { label: "Vaste Lasten", value: "€ 1.450", trend: "45.3%", color: "text-orange-500", bg: "bg-orange-50" },
                   { label: "Vrij besteedbaar", value: "€ 1.750", trend: "54.7%", color: "text-blue-500", bg: "bg-blue-50" },
                 ].map((c) => (
-                  <div key={c.label} className="bg-white rounded-xl border border-gray-100 p-3">
-                    <p className="text-[10px] text-gray-400 mb-1">{c.label}</p>
-                    <p className="text-base font-bold text-gray-900 mb-1.5">{c.value}</p>
+                  <div key={c.label} className="bg-white rounded-xl border border-gray-100 p-2.5">
+                    <p className="text-[9px] text-gray-400 mb-1">{c.label}</p>
+                    <p className="text-sm font-bold text-gray-900 mb-1.5">{c.value}</p>
                     <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full ${c.bg} ${c.color}`}>↑ {c.trend}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 <div className="bg-white rounded-xl border border-gray-100 p-3">
                   <p className="text-[10px] font-semibold text-gray-700 mb-2">Uitgaves deze maand</p>
                   {[
@@ -117,8 +130,14 @@ export default function DashboardMockup() {
                       <text x="32" y="35" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#111">54.7%</text>
                     </svg>
                     <div className="space-y-1.5">
-                      <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#52b788]" /><span className="text-[9px] text-gray-500">Vrij besteedbaar</span></div>
-                      <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-red-300" /><span className="text-[9px] text-gray-500">Vaste lasten</span></div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-[#52b788]" />
+                        <span className="text-[9px] text-gray-500">Vrij besteedbaar</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-red-300" />
+                        <span className="text-[9px] text-gray-500">Vaste lasten</span>
+                      </div>
                     </div>
                   </div>
                 </div>
