@@ -48,14 +48,14 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 md:mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Hallo{userName ? `, ${userName}` : ""} 👋
           </h1>
           <p className="text-gray-600 dark:text-white/60 mt-1 text-sm">Welkom bij je budget overzicht.</p>
         </div>
-        <div className="flex items-center gap-1 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl p-1">
+        <div className="flex items-center gap-1 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl p-1 overflow-x-auto">
           {MONTHS.map((m) => (
             <button
               key={m}
@@ -72,13 +72,13 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-5 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-4 md:mb-6">
         <StatCard label="Inkomsten" value={inkStr} sub="per maand" trend="totaal inkomen" positive />
         <StatCard label="Vaste Lasten" value={vlStr} sub="maandelijks" trend={vasteLastenTotaal === null ? "laden..." : vasteLastenTotaal === 0 ? "nog in te vullen" : "vaste kosten"} positive={false} />
         <StatCard label="Vrij besteedbaar" value={vrijStr} sub="resterend" trend={inkomstenTotaal && vasteLastenTotaal ? "na vaste lasten" : "nog in te vullen"} positive />
       </div>
 
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
         <UitgavesCard items={uitgaves} />
         <BudgetHealth uitgaves={uitgaves} inkomstenTotaal={inkomstenTotaal ?? 0} />
       </div>

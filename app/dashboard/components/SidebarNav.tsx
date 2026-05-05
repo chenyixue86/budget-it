@@ -12,15 +12,33 @@ const NAV_ITEMS = [
   { href: "/dashboard/instellingen", label: "Instellingen", Icon: InstellingenIcon, comingSoon: false },
 ];
 
-export default function SidebarNav() {
+interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function SidebarNav({ isOpen, onClose }: Props) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-white dark:bg-[#111111] border-r border-gray-100 dark:border-white/10 flex flex-col py-6 shrink-0 transition-colors duration-200">
-      <div className="px-6 mb-8">
+    <aside
+      className={`
+        fixed md:relative inset-y-0 left-0 z-50
+        w-64 bg-white dark:bg-[#111111] border-r border-gray-100 dark:border-white/10
+        flex flex-col py-6 shrink-0 transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+      `}
+    >
+      <div className="px-6 mb-8 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
           budget<span className="text-[#52b788]">-it</span>
         </Link>
+        <button
+          onClick={onClose}
+          className="md:hidden text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/70 transition-colors"
+        >
+          <CloseIcon />
+        </button>
       </div>
 
       <nav className="flex-1 px-3 space-y-0.5">
@@ -42,6 +60,7 @@ export default function SidebarNav() {
             <Link
               key={href}
               href={href}
+              onClick={onClose}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                 active
                   ? "bg-[#f0faf4] dark:bg-[#52b788]/10 text-[#2d6a4f] dark:text-[#52b788] font-medium"
@@ -54,8 +73,16 @@ export default function SidebarNav() {
           );
         })}
       </nav>
-
     </aside>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
   );
 }
 
