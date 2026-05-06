@@ -8,8 +8,8 @@ const FEATURES = [
   { label: "Vaste lasten beheren",   budgetit: "Gratis",  andere: "€ 2.99 / maand" },
   { label: "Maandelijks overzicht",  budgetit: "Gratis",  andere: "€ 2.99 / maand" },
   { label: "Dark mode",              budgetit: "Gratis",  andere: "€ 1.99 / maand" },
-  { label: "Geen advertenties",      budgetit: "Gratis",  andere: "€ 1.99 / maand" },
-  { label: "Onbeperkte data",        budgetit: "Gratis",  andere: "€ 2.99 / maand" },
+  { label: "Geen advertenties",      budgetit: "Gratis",  andere: "€ 5.99 / maand" },
+  { label: "Onbeperkte data",        budgetit: "Gratis",  andere: "€ 19.99 / maand" },
 ];
 
 const TOTAAL_ANDERE = "€ 20.93 / maand";
