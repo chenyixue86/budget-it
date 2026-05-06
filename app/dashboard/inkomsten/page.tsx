@@ -67,7 +67,7 @@ export default function InkomstenPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
           <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">Inkomen toevoegen</h3>
           <form onSubmit={add} className="space-y-3">
