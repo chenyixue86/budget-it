@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
 
-type UitgaveItem = { id: string; naam: string; bedrag: number };
+type UitgaveItem = { id: string; naam: string; bedrag: number; categorie: string };
 
 const SEGMENT_COLORS = ["#fca5a5", "#fdba74", "#fde68a", "#93c5fd", "#c4b5fd", "#f9a8d4"];
 
@@ -35,7 +35,7 @@ export default function Dashboard() {
       if (data) setVasteLastenTotaal(data.reduce((s: number, i: { bedrag: number }) => s + i.bedrag, 0));
     });
 
-    supabase.from("uitgaves").select("id, naam, bedrag").order("created_at").then(({ data }) => {
+    supabase.from("uitgaves").select("id, naam, bedrag, categorie").order("created_at").then(({ data }) => {
       if (data) setUitgaves(data);
     });
   }, [supabase]);
@@ -109,27 +109,35 @@ function StatCard({ label, value, sub, trend, positive }: {
 
 function UitgavesCard({ items }: { items: UitgaveItem[] }) {
   const totaal = items.reduce((s, i) => s + i.bedrag, 0);
+
+  const groepen = Object.entries(
+    items.reduce<Record<string, number>>((acc, item) => {
+      acc[item.categorie] = (acc[item.categorie] || 0) + item.bedrag;
+      return acc;
+    }, {})
+  ).sort((a, b) => b[1] - a[1]);
+
   return (
     <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm">Uitgaves deze maand</h3>
+        <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm">Uitgaves per categorie</h3>
         <span className="text-xs text-gray-500 dark:text-white/50">
           Totaal: € {totaal.toLocaleString("nl-NL", { minimumFractionDigits: 0 })}
         </span>
       </div>
-      {items.length === 0 ? (
+      {groepen.length === 0 ? (
         <p className="text-sm text-gray-500 dark:text-white/50 text-center py-8">Nog geen uitgaves toegevoegd.</p>
       ) : (
         <div className="space-y-3">
-          {items.map((item) => {
-            const pct = totaal > 0 ? Math.round((item.bedrag / totaal) * 100) : 0;
+          {groepen.map(([cat, bedrag]) => {
+            const pct = totaal > 0 ? Math.round((bedrag / totaal) * 100) : 0;
             return (
-              <div key={item.id}>
+              <div key={cat}>
                 <div className="flex items-center justify-between text-sm mb-1.5">
-                  <span className="text-gray-600 dark:text-white/60">{item.naam}</span>
+                  <span className="text-gray-600 dark:text-white/60">{cat}</span>
                   <div className="flex items-center gap-3">
                     <span className="text-gray-800 dark:text-white/80 font-medium">
-                      € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 0 })}
+                      € {bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 0 })}
                     </span>
                     <span className="text-xs text-gray-500 dark:text-white/50 w-8 text-right">{pct}%</span>
                   </div>
@@ -150,9 +158,16 @@ function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; 
   const C = 2 * Math.PI * 46;
   const totaalUitgaves = uitgaves.reduce((s, i) => s + i.bedrag, 0);
 
-  const segments = uitgaves.map((item, i) => ({
-    naam: item.naam,
-    pct: totaalUitgaves > 0 ? (item.bedrag / totaalUitgaves) * 100 : 0,
+  const groepen = Object.entries(
+    uitgaves.reduce<Record<string, number>>((acc, item) => {
+      acc[item.categorie] = (acc[item.categorie] || 0) + item.bedrag;
+      return acc;
+    }, {})
+  ).sort((a, b) => b[1] - a[1]);
+
+  const segments = groepen.map(([naam, bedrag], i) => ({
+    naam,
+    pct: totaalUitgaves > 0 ? (bedrag / totaalUitgaves) * 100 : 0,
     color: SEGMENT_COLORS[i % SEGMENT_COLORS.length],
   }));
 
@@ -193,7 +208,7 @@ function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; 
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-xs text-gray-600 dark:text-white/60 text-center leading-tight">
-              {noData ? "—" : `${uitgaves.length} posten`}
+              {noData ? "—" : `${groepen.length} categorieën`}
             </span>
           </div>
         </div>

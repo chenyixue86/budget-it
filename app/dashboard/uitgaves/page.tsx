@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-type Uitgave = { id: string; naam: string; bedrag: number };
+type Uitgave = { id: string; naam: string; bedrag: number; categorie: string };
 
 export default function UitgavesPage() {
   const supabase = createClient();
@@ -13,12 +13,13 @@ export default function UitgavesPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [naam, setNaam] = useState("");
   const [bedrag, setBedrag] = useState("");
+  const [categorie, setCategorie] = useState("Overig");
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
     const { data } = await supabase
       .from("uitgaves")
-      .select("id, naam, bedrag")
+      .select("id, naam, bedrag, categorie")
       .order("created_at");
     if (data) setItems(data);
   }, [supabase]);
@@ -39,9 +40,11 @@ export default function UitgavesPage() {
       user_id: userId,
       naam: naam.trim(),
       bedrag: parseFloat(bedrag),
+      categorie,
     });
     setNaam("");
     setBedrag("");
+    setCategorie("Overig");
     setSaving(false);
     load();
   }
@@ -83,6 +86,18 @@ export default function UitgavesPage() {
               />
             </div>
             <div>
+              <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">Categorie</label>
+              <select
+                value={categorie}
+                onChange={(e) => setCategorie(e.target.value)}
+                className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
+              >
+                {["Huur", "Boodschappen", "Transport", "Entertainment", "Abonnementen", "Gezondheid", "Kleding", "Overig"].map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+            <div>
               <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">Bedrag per maand (€)</label>
               <input
                 type="number"
@@ -113,7 +128,10 @@ export default function UitgavesPage() {
             <div className="space-y-2">
               {items.map((item) => (
                 <div key={item.id} className="flex items-center justify-between py-2.5 px-3 bg-gray-50 dark:bg-white/5 rounded-xl">
-                  <span className="text-sm text-gray-700 dark:text-white/70">{item.naam}</span>
+                  <div>
+                    <span className="text-sm text-gray-700 dark:text-white/70">{item.naam}</span>
+                    <span className="text-xs text-gray-400 dark:text-white/30 block">{item.categorie}</span>
+                  </div>
                   <div className="flex items-center gap-3">
                     <span className="text-sm font-semibold text-gray-900 dark:text-white">
                       € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
