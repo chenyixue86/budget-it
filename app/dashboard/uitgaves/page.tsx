@@ -90,7 +90,7 @@ export default function UitgavesPage() {
               <select
                 value={categorie}
                 onChange={(e) => setCategorie(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
+                className="w-full border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors appearance-none cursor-pointer"
               >
                 {["Huur", "Boodschappen", "Transport", "Entertainment", "Abonnementen", "Gezondheid", "Kleding", "Overig"].map((c) => (
                   <option key={c} value={c}>{c}</option>
