@@ -206,11 +206,6 @@ function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; 
               )
             )}
           </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-xs text-gray-600 dark:text-white/60 text-center leading-tight">
-              {noData ? "—" : `${groepen.length} categorieën`}
-            </span>
-          </div>
         </div>
 
         <div className="space-y-2.5 flex-1">
