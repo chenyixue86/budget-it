@@ -20,11 +20,11 @@ export const metadata: Metadata = {
   description: "Gratis budgettool voor iedereen. Voer je inkomsten, uitgaves en vaste lasten in en zie direct hoeveel je overhoudt. Geen abonnement, geen kosten.",
   keywords: ["budget app", "gratis budget tool", "inkomsten bijhouden", "uitgaves bijhouden", "persoonlijke financiën", "budget overzicht"],
   authors: [{ name: "budget-it" }],
-  metadataBase: new URL("https://budget-it-blond.vercel.app"),
+  metadataBase: new URL("https://budget-it.io"),
   openGraph: {
     title: "budget-it — Grip op je geld",
     description: "Gratis budgettool. Voer je inkomsten en uitgaves in, budget-it berekent alles automatisch.",
-    url: "https://budget-it-blond.vercel.app",
+    url: "https://budget-it.io",
     siteName: "budget-it",
     locale: "nl_NL",
     type: "website",
