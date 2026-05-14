@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/lib/i18n";
 
 declare global {
   interface Window {
@@ -17,6 +18,7 @@ export default function BugReportForm() {
   const [bericht, setBericht] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
+  const { t } = useLanguage();
 
   useEffect(() => {
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
@@ -50,7 +52,7 @@ export default function BugReportForm() {
           });
         });
       } catch {
-        setError("Verificatie mislukt. Probeer opnieuw.");
+        setError(t.bugForm.verifyError);
         setStatus("error");
         return;
       }
@@ -69,7 +71,7 @@ export default function BugReportForm() {
       setBericht("");
     } else {
       const data = await res.json();
-      setError(data.error || "Er is iets misgegaan.");
+      setError(data.error || t.bugForm.genericError);
       setStatus("error");
     }
   }
@@ -82,8 +84,8 @@ export default function BugReportForm() {
             <polyline points="20,6 9,17 4,12" />
           </svg>
         </div>
-        <p className="text-gray-900 dark:text-white font-medium">Bedankt voor je feedback!</p>
-        <p className="text-gray-500 dark:text-white/50 text-sm mt-1">We nemen het zo snel mogelijk door.</p>
+        <p className="text-gray-900 dark:text-white font-medium">{t.bugForm.successTitle}</p>
+        <p className="text-gray-500 dark:text-white/50 text-sm mt-1">{t.bugForm.successSub}</p>
       </div>
     );
   }
@@ -93,19 +95,19 @@ export default function BugReportForm() {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm text-gray-700 dark:text-white/70 mb-2">
-            Naam <span className="text-gray-400 dark:text-white/40">(optioneel)</span>
+            {t.bugForm.nameLabel} <span className="text-gray-400 dark:text-white/40">{t.bugForm.optional}</span>
           </label>
           <input
             type="text"
             value={naam}
             onChange={(e) => setNaam(e.target.value)}
-            placeholder="naam"
+            placeholder={t.bugForm.namePlaceholder}
             className="w-full bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-white/8 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/20 focus:outline-none focus:border-green-500/40 dark:focus:border-green-400/40 transition-colors"
           />
         </div>
         <div>
           <label className="block text-sm text-gray-700 dark:text-white/70 mb-2">
-            Email <span className="text-gray-400 dark:text-white/40">(optioneel)</span>
+            Email <span className="text-gray-400 dark:text-white/40">{t.bugForm.optional}</span>
           </label>
           <input
             type="email"
@@ -118,13 +120,13 @@ export default function BugReportForm() {
       </div>
 
       <div>
-        <label className="block text-sm text-gray-700 dark:text-white/70 mb-2">Wat ging er mis?</label>
+        <label className="block text-sm text-gray-700 dark:text-white/70 mb-2">{t.bugForm.messageLabel}</label>
         <textarea
           required
           rows={5}
           value={bericht}
           onChange={(e) => setBericht(e.target.value)}
-          placeholder="Beschrijf de bug of je feedback. Wat deed je, wat verwachtte je, wat gebeurde er?"
+          placeholder={t.bugForm.messagePlaceholder}
           className="w-full bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-white/8 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/20 focus:outline-none focus:border-green-500/40 dark:focus:border-green-400/40 transition-colors resize-none"
         />
       </div>
@@ -140,7 +142,7 @@ export default function BugReportForm() {
         disabled={status === "loading"}
         className="btn-primary w-full text-black font-semibold py-3.5 rounded-xl text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {status === "loading" ? "Versturen..." : "Verstuur →"}
+        {status === "loading" ? t.bugForm.sending : t.bugForm.send}
       </button>
     </form>
   );

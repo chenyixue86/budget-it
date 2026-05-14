@@ -1,21 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/lib/i18n";
 
-const FEATURES = [
-  { label: "Inkomsten bijhouden",    budgetit: "Gratis",  andere: "€ 3.99 / maand" },
-  { label: "Uitgaves registreren",   budgetit: "Gratis",  andere: "€ 3.99 / maand" },
-  { label: "Vaste lasten beheren",   budgetit: "Gratis",  andere: "€ 2.99 / maand" },
-  { label: "Maandelijks overzicht",  budgetit: "Gratis",  andere: "€ 2.99 / maand" },
-  { label: "Dark mode",              budgetit: "Gratis",  andere: "€ 1.99 / maand" },
-  { label: "Geen advertenties",      budgetit: "Gratis",  andere: "€ 5.99 / maand" },
-  { label: "Onbeperkte data",        budgetit: "Gratis",  andere: "€ 19.99 / maand" },
-];
-
+const PRICES_ANDERE = ["€ 3.99 / maand", "€ 3.99 / maand", "€ 2.99 / maand", "€ 2.99 / maand", "€ 1.99 / maand", "€ 5.99 / maand", "€ 19.99 / maand"];
 const TOTAAL_ANDERE = "€ 20.93 / maand";
 
 export default function ComparisonSection() {
   const [tab, setTab] = useState<"budgetit" | "andere">("budgetit");
+  const { t } = useLanguage();
   const isBudgetit = tab === "budgetit";
 
   return (
@@ -25,33 +18,29 @@ export default function ComparisonSection() {
 
           {/* Left */}
           <div>
-            <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">Vergelijking</p>
+            <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">{t.comparison.label}</p>
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight text-gray-900 dark:text-white mb-5">
-              Ga lean en bespaar<br />
-              <span className="text-green-500 dark:text-green-400">op je budgetapp.</span>
+              {t.comparison.title}<br />
+              <span className="text-green-500 dark:text-green-400">{t.comparison.titleAccent}</span>
             </h2>
             <p className="text-gray-600 dark:text-white/65 text-base leading-relaxed mb-8 max-w-md">
-              Andere budgetapps rekenen je voor elke feature apart. Bij budget-it betaal je niets — nooit. Geen abonnement, geen verborgen kosten.
+              {t.comparison.sub}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-green-600 dark:text-green-400">
-                    <CheckIcon />
-                  </span>
-                  <span className="font-semibold text-gray-900 dark:text-white text-sm">100% gratis</span>
+                  <span className="text-green-600 dark:text-green-400"><CheckIcon /></span>
+                  <span className="font-semibold text-gray-900 dark:text-white text-sm">{t.comparison.free}</span>
                 </div>
-                <p className="text-gray-600 dark:text-white/60 text-sm pl-6">Alle features, altijd, voor iedereen.</p>
+                <p className="text-gray-600 dark:text-white/60 text-sm pl-6">{t.comparison.freeSub}</p>
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-green-600 dark:text-green-400">
-                    <CheckIcon />
-                  </span>
-                  <span className="font-semibold text-gray-900 dark:text-white text-sm">Geen creditcard nodig</span>
+                  <span className="text-green-600 dark:text-green-400"><CheckIcon /></span>
+                  <span className="font-semibold text-gray-900 dark:text-white text-sm">{t.comparison.noCard}</span>
                 </div>
-                <p className="text-gray-600 dark:text-white/60 text-sm pl-6">Gewoon registreren en beginnen.</p>
+                <p className="text-gray-600 dark:text-white/60 text-sm pl-6">{t.comparison.noCardSub}</p>
               </div>
             </div>
           </div>
@@ -78,7 +67,7 @@ export default function ComparisonSection() {
                     : "text-gray-500 dark:text-white/50 hover:text-gray-700 dark:hover:text-white/70"
                 }`}
               >
-                Andere apps
+                {t.comparison.otherApps}
               </button>
             </div>
 
@@ -86,23 +75,19 @@ export default function ComparisonSection() {
             <div className="bg-white dark:bg-[#0f0f0f] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5">
               {/* Header */}
               <div className="grid grid-cols-2 border-b-2 border-green-500/60 dark:border-green-400/40 px-5 py-3 bg-gray-50 dark:bg-white/3">
-                <span className="text-xs font-semibold text-gray-600 dark:text-white/60 uppercase tracking-wide">Feature</span>
+                <span className="text-xs font-semibold text-gray-600 dark:text-white/60 uppercase tracking-wide">{t.comparison.colFeature}</span>
                 <span className="text-xs font-semibold text-gray-600 dark:text-white/60 uppercase tracking-wide">
-                  {isBudgetit ? "Kosten bij budget-it" : "Kosten bij anderen"}
+                  {isBudgetit ? t.comparison.colCost : t.comparison.colCostOther}
                 </span>
               </div>
 
               {/* Rows */}
               <div className="divide-y divide-gray-50 dark:divide-white/5">
-                {FEATURES.map((f) => (
+                {t.comparison.features.map((f, i) => (
                   <div key={f.label} className="grid grid-cols-2 px-5 py-3.5 hover:bg-gray-50/60 dark:hover:bg-white/3 transition-colors">
                     <span className="text-sm text-gray-700 dark:text-white/70">{f.label}</span>
-                    <span className={`text-sm font-medium ${
-                      isBudgetit
-                        ? "text-green-600 dark:text-green-400"
-                        : "text-gray-700 dark:text-white/70"
-                    }`}>
-                      {isBudgetit ? f.budgetit : f.andere}
+                    <span className={`text-sm font-medium ${isBudgetit ? "text-green-600 dark:text-green-400" : "text-gray-700 dark:text-white/70"}`}>
+                      {isBudgetit ? t.comparison.gratis : PRICES_ANDERE[i]}
                     </span>
                   </div>
                 ))}
@@ -110,7 +95,7 @@ export default function ComparisonSection() {
 
               {/* Total */}
               <div className="grid grid-cols-2 px-5 py-4 border-t border-gray-100 dark:border-white/8 bg-gray-50 dark:bg-white/3">
-                <span className="text-sm font-bold text-gray-800 dark:text-white/80">Totaal</span>
+                <span className="text-sm font-bold text-gray-800 dark:text-white/80">{t.comparison.total}</span>
                 <span className={`text-xl font-bold ${isBudgetit ? "text-green-600 dark:text-green-400" : "text-red-500"}`}>
                   {isBudgetit ? "€ 0 / maand" : TOTAAL_ANDERE}
                 </span>
