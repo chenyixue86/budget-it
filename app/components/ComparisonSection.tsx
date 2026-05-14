@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/i18n";
 
-const PRICES_ANDERE = ["€ 3.99 / maand", "€ 3.99 / maand", "€ 2.99 / maand", "€ 2.99 / maand", "€ 1.99 / maand", "€ 5.99 / maand", "€ 19.99 / maand"];
-const TOTAAL_ANDERE = "€ 20.93 / maand";
+const PRICES_ANDERE = [3.99, 3.99, 2.99, 2.99, 1.99, 5.99, 19.99];
+const TOTAAL_ANDERE_BEDRAG = "€ 20.93";
 
 export default function ComparisonSection() {
   const [tab, setTab] = useState<"budgetit" | "andere">("budgetit");
@@ -87,7 +87,7 @@ export default function ComparisonSection() {
                   <div key={f.label} className="grid grid-cols-2 px-5 py-3.5 hover:bg-gray-50/60 dark:hover:bg-white/3 transition-colors">
                     <span className="text-sm text-gray-700 dark:text-white/70">{f.label}</span>
                     <span className={`text-sm font-medium ${isBudgetit ? "text-green-600 dark:text-green-400" : "text-gray-700 dark:text-white/70"}`}>
-                      {isBudgetit ? t.comparison.gratis : PRICES_ANDERE[i]}
+                      {isBudgetit ? t.comparison.gratis : `€ ${PRICES_ANDERE[i].toFixed(2)} / ${t.comparison.perMonth}`}
                     </span>
                   </div>
                 ))}
@@ -97,7 +97,7 @@ export default function ComparisonSection() {
               <div className="grid grid-cols-2 px-5 py-4 border-t border-gray-100 dark:border-white/8 bg-gray-50 dark:bg-white/3">
                 <span className="text-sm font-bold text-gray-800 dark:text-white/80">{t.comparison.total}</span>
                 <span className={`text-xl font-bold ${isBudgetit ? "text-green-600 dark:text-green-400" : "text-red-500"}`}>
-                  {isBudgetit ? "€ 0 / maand" : TOTAAL_ANDERE}
+                  {isBudgetit ? `€ 0 / ${t.comparison.perMonth}` : `${TOTAAL_ANDERE_BEDRAG} / ${t.comparison.perMonth}`}
                 </span>
               </div>
             </div>

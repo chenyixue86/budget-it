@@ -133,6 +133,7 @@ const translations = {
       colCostOther: "Kosten bij anderen",
       total: "Totaal",
       gratis: "Gratis",
+      perMonth: "maand",
       features: [
         { label: "Inkomsten bijhouden" },
         { label: "Uitgaves registreren" },
@@ -284,6 +285,7 @@ const translations = {
       colCostOther: "Cost at others",
       total: "Total",
       gratis: "Free",
+      perMonth: "month",
       features: [
         { label: "Track income" },
         { label: "Register expenses" },
