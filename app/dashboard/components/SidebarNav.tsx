@@ -7,7 +7,7 @@ const NAV_ITEMS = [
   { href: "/dashboard", label: "Home", Icon: HomeIcon, comingSoon: false },
   { href: "/dashboard/inkomsten", label: "Inkomsten", Icon: InkomenIcon, comingSoon: false },
   { href: "/dashboard/uitgaves", label: "Uitgaves", Icon: UitgavesIcon, comingSoon: false },
-  { href: "/dashboard/vaste-lasten", label: "Vaste Lasten", Icon: VasteLastenIcon, comingSoon: true },
+  { href: "/dashboard/vaste-lasten", label: "Vaste Lasten", Icon: VasteLastenIcon, comingSoon: false },
   { href: "/dashboard/overzicht", label: "Overzicht", Icon: OverzichtIcon, comingSoon: false },
   { href: "/dashboard/instellingen", label: "Instellingen", Icon: InstellingenIcon, comingSoon: false },
 ];
