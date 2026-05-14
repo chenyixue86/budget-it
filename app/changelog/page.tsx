@@ -1,15 +1,6 @@
 import LandingNavbar from "../components/LandingNavbar";
 
-const UPCOMING: { title: string; description: string }[] = [
-  {
-    title: "Vaste Lasten",
-    description: "Voeg je maandelijkse vaste kosten toe zoals huur, abonnementen en verzekeringen.",
-  },
-  {
-    title: "Categorieën Vaste Lasten",
-    description: "Beschrijving komt later.",
-  },
-];
+const UPCOMING: { title: string; description: string }[] = [];
 
 const RELEASES: {
   version: string;
@@ -17,6 +8,16 @@ const RELEASES: {
   label?: string;
   changes: { type: "new" | "fix" | "improvement"; text: string }[];
 }[] = [
+  {
+    version: "v0.1.1",
+    date: "Mei 2026",
+    changes: [
+      { type: "new", text: "Vaste Lasten pagina — voeg je maandelijkse vaste kosten toe zoals huur, abonnementen en verzekeringen" },
+      { type: "new", text: "Categorieën bij vaste lasten" },
+      { type: "new", text: "NL/EN taalondersteuning — automatisch op basis van browsertaal" },
+      { type: "new", text: "SEO verbeteringen — sitemap, robots.txt en Open Graph tags" },
+    ],
+  },
   {
     version: "v0.1.0",
     date: "Mei 2026",
@@ -61,29 +62,30 @@ export default function ChangelogPage() {
         </div>
 
         {/* Upcoming */}
-        <section className="mb-16">
-          <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Binnenkort</h2>
-            <span className="text-xs font-medium text-gray-400 dark:text-white/30">v0.1.1</span>
-            <div className="flex-1 h-px bg-gray-100 dark:bg-white/10" />
-          </div>
-          <div className="space-y-4">
-            {UPCOMING.map((item, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-4 p-4 rounded-xl border border-dashed border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-white/[0.02]"
-              >
-                <span className="mt-0.5 shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-orange-50 dark:bg-orange-400/10 text-orange-500 dark:text-orange-400 border border-orange-200 dark:border-orange-400/20">
-                  BINNENKORT
-                </span>
-                <div>
-                  <p className="text-sm font-medium text-gray-800 dark:text-white/80">{item.title}</p>
-                  <p className="text-sm text-gray-500 dark:text-white/40 mt-0.5">{item.description}</p>
+        {UPCOMING.length > 0 && (
+          <section className="mb-16">
+            <div className="flex items-center gap-3 mb-6">
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Binnenkort</h2>
+              <div className="flex-1 h-px bg-gray-100 dark:bg-white/10" />
+            </div>
+            <div className="space-y-4">
+              {UPCOMING.map((item, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-4 p-4 rounded-xl border border-dashed border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-white/[0.02]"
+                >
+                  <span className="mt-0.5 shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-orange-50 dark:bg-orange-400/10 text-orange-500 dark:text-orange-400 border border-orange-200 dark:border-orange-400/20">
+                    BINNENKORT
+                  </span>
+                  <div>
+                    <p className="text-sm font-medium text-gray-800 dark:text-white/80">{item.title}</p>
+                    <p className="text-sm text-gray-500 dark:text-white/40 mt-0.5">{item.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Releases */}
         <section className="space-y-12">
