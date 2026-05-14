@@ -157,6 +157,40 @@ const translations = {
       verifyError: "Verificatie mislukt. Probeer opnieuw.",
       genericError: "Er is iets misgegaan.",
     },
+    // Changelog
+    changelog: {
+      badge: "Changelog",
+      title: "Updates & Roadmap",
+      subtitle: "Wat er nieuw is en wat er aankomt voor budget-it.",
+      binnenkort: "Binnenkort",
+      binnenkortBadge: "BINNENKORT",
+      typeLabels: { new: "Nieuw", fix: "Fix", improvement: "Verbeterd" },
+      upcoming: [
+        { title: "Spaardoel", description: "Stel in hoeveel je wilt sparen per maand en zie direct hoeveel je nog kunt uitgeven." },
+      ],
+      releases: [
+        {
+          version: "v0.1.1",
+          date: "15 Mei 2026",
+          label: "",
+          changes: [
+            { type: "new", text: "Vaste Lasten pagina — voeg je maandelijkse vaste kosten toe zoals huur, abonnementen en verzekeringen" },
+            { type: "new", text: "Categorieën bij vaste lasten" },
+            { type: "new", text: "NL/EN taalondersteuning — automatisch op basis van browsertaal" },
+          ],
+        },
+        {
+          version: "v0.1.0",
+          date: "Mei 2026",
+          label: "Eerste release",
+          changes: [
+            { type: "new", text: "Dashboard met inkomsten, uitgaves en vrij besteedbaar overzicht" },
+            { type: "new", text: "Overzicht pagina met totalen en progress bar" },
+            { type: "new", text: "Dark mode" },
+          ],
+        },
+      ],
+    },
     // Common
     common: {
       verwijder: "Verwijder",
@@ -308,6 +342,39 @@ const translations = {
       successSub: "We'll review it as soon as possible.",
       verifyError: "Verification failed. Please try again.",
       genericError: "Something went wrong.",
+    },
+    changelog: {
+      badge: "Changelog",
+      title: "Updates & Roadmap",
+      subtitle: "What's new and what's coming to budget-it.",
+      binnenkort: "Coming soon",
+      binnenkortBadge: "COMING SOON",
+      typeLabels: { new: "New", fix: "Fix", improvement: "Improved" },
+      upcoming: [
+        { title: "Savings goal", description: "Set how much you want to save per month and see exactly how much you can still spend." },
+      ],
+      releases: [
+        {
+          version: "v0.1.1",
+          date: "15 May 2026",
+          label: "",
+          changes: [
+            { type: "new", text: "Fixed Costs page — add your monthly fixed costs like rent, subscriptions and insurance" },
+            { type: "new", text: "Categories for fixed costs" },
+            { type: "new", text: "NL/EN language support — automatically based on browser language" },
+          ],
+        },
+        {
+          version: "v0.1.0",
+          date: "May 2026",
+          label: "First release",
+          changes: [
+            { type: "new", text: "Dashboard with income, expenses and freely spendable overview" },
+            { type: "new", text: "Overview page with totals and progress bar" },
+            { type: "new", text: "Dark mode" },
+          ],
+        },
+      ],
     },
     common: {
       verwijder: "Delete",
