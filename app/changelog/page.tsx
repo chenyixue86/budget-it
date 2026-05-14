@@ -10,7 +10,7 @@ const RELEASES: {
 }[] = [
   {
     version: "v0.1.1",
-    date: "Mei 2026",
+    date: "15 Mei 2026",
     changes: [
       { type: "new", text: "Vaste Lasten pagina — voeg je maandelijkse vaste kosten toe zoals huur, abonnementen en verzekeringen" },
       { type: "new", text: "Categorieën bij vaste lasten" },
