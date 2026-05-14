@@ -195,7 +195,7 @@ const translations = {
       verwijder: "Delete",
     },
   },
-} as const;
+};
 
 export type Translations = typeof translations.nl;
 
