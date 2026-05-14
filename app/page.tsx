@@ -21,6 +21,7 @@ export default function Home() {
 }
 
 function Hero() {
+  const { t } = useLanguage();
   return (
     <section className="flex flex-col items-center justify-center text-center px-6 pt-28 md:pt-40 pb-16 md:pb-28 relative overflow-hidden">
       <div className="hero-blob absolute top-1/3 left-1/2 w-[600px] h-[400px] bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
