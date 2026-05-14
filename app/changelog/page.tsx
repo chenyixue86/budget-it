@@ -15,7 +15,6 @@ const RELEASES: {
       { type: "new", text: "Vaste Lasten pagina — voeg je maandelijkse vaste kosten toe zoals huur, abonnementen en verzekeringen" },
       { type: "new", text: "Categorieën bij vaste lasten" },
       { type: "new", text: "NL/EN taalondersteuning — automatisch op basis van browsertaal" },
-      { type: "new", text: "SEO verbeteringen — sitemap, robots.txt en Open Graph tags" },
     ],
   },
   {
