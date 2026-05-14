@@ -17,7 +17,30 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "budget-it — Grip op je geld",
-  description: "Voer je inkomsten, uitgaves en vaste lasten in. budget-it berekent alles automatisch en geeft je een helder overzicht.",
+  description: "Gratis budgettool voor iedereen. Voer je inkomsten, uitgaves en vaste lasten in en zie direct hoeveel je overhoudt. Geen abonnement, geen kosten.",
+  keywords: ["budget app", "gratis budget tool", "inkomsten bijhouden", "uitgaves bijhouden", "persoonlijke financiën", "budget overzicht"],
+  authors: [{ name: "budget-it" }],
+  metadataBase: new URL("https://budget-it-blond.vercel.app"),
+  openGraph: {
+    title: "budget-it — Grip op je geld",
+    description: "Gratis budgettool. Voer je inkomsten en uitgaves in, budget-it berekent alles automatisch.",
+    url: "https://budget-it-blond.vercel.app",
+    siteName: "budget-it",
+    locale: "nl_NL",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "budget-it — Grip op je geld",
+    description: "Gratis budgettool. Voer je inkomsten en uitgaves in, budget-it berekent alles automatisch.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  verification: {
+    google: "OdFReFaTnHdk85uVAsxMy9CYYXJLHk-wfqRGdbbNlcY",
+  },
 };
 
 export default function RootLayout({
