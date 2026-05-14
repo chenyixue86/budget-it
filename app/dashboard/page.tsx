@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+import { useLanguage } from "@/lib/i18n";
 
 type UitgaveItem = { id: string; naam: string; bedrag: number; categorie: string };
 
@@ -15,7 +14,9 @@ function fmt(n: number) {
 
 export default function Dashboard() {
   const supabase = createClient();
-  const activeMonth = MONTHS[new Date().getMonth()];
+  const { t } = useLanguage();
+  const months = t.dashboard.months;
+  const activeMonth = months[new Date().getMonth()];
   const [inkomstenTotaal, setInkomstenTotaal] = useState<number | null>(null);
   const [vasteLastenTotaal, setVasteLastenTotaal] = useState<number | null>(null);
   const [uitgaves, setUitgaves] = useState<UitgaveItem[]>([]);
@@ -51,12 +52,12 @@ export default function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 md:mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Hallo{userName ? `, ${userName}` : ""} 👋
+            {t.dashboard.greeting}{userName ? `, ${userName}` : ""} 👋
           </h1>
-          <p className="text-gray-600 dark:text-white/60 mt-1 text-sm">Welkom bij je budget overzicht.</p>
+          <p className="text-gray-600 dark:text-white/60 mt-1 text-sm">{t.dashboard.subtitle}</p>
         </div>
         <div className="flex items-center gap-1 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl p-1 overflow-x-auto">
-          {MONTHS.map((m) => (
+          {months.map((m) => (
             <button
               key={m}
               disabled
@@ -73,9 +74,21 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-4 md:mb-6">
-        <StatCard label="Inkomsten" value={inkStr} sub="per maand" trend="totaal inkomen" positive />
-        <StatCard label="Vaste Lasten" value={vlStr} sub="maandelijks" trend={vasteLastenTotaal === null ? "laden..." : vasteLastenTotaal === 0 ? "nog in te vullen" : "vaste kosten"} positive={false} />
-        <StatCard label="Vrij besteedbaar" value={vrijStr} sub="resterend" trend={inkomstenTotaal && vasteLastenTotaal ? "na vaste lasten" : "nog in te vullen"} positive />
+        <StatCard label={t.dashboard.inkomsten} value={inkStr} sub={t.dashboard.perMaand} trend={t.dashboard.totaalInkomen} positive />
+        <StatCard
+          label={t.dashboard.vasteLasten}
+          value={vlStr}
+          sub={t.dashboard.maandelijks}
+          trend={vasteLastenTotaal === null ? t.dashboard.laden : vasteLastenTotaal === 0 ? t.dashboard.nogInTeVullen : t.dashboard.vasteKosten}
+          positive={false}
+        />
+        <StatCard
+          label={t.dashboard.vrijBesteedbaar}
+          value={vrijStr}
+          sub={t.dashboard.resterend}
+          trend={inkomstenTotaal && vasteLastenTotaal ? t.dashboard.naVasteLasten : t.dashboard.nogInTeVullen}
+          positive
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
@@ -108,6 +121,7 @@ function StatCard({ label, value, sub, trend, positive }: {
 }
 
 function UitgavesCard({ items }: { items: UitgaveItem[] }) {
+  const { t } = useLanguage();
   const totaal = items.reduce((s, i) => s + i.bedrag, 0);
 
   const groepen = Object.entries(
@@ -120,13 +134,13 @@ function UitgavesCard({ items }: { items: UitgaveItem[] }) {
   return (
     <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm">Uitgaves per categorie</h3>
+        <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm">{t.dashboard.uitgavesDezeMaand}</h3>
         <span className="text-xs text-gray-500 dark:text-white/50">
-          Totaal: € {totaal.toLocaleString("nl-NL", { minimumFractionDigits: 0 })}
+          {t.dashboard.totaal} € {totaal.toLocaleString("nl-NL", { minimumFractionDigits: 0 })}
         </span>
       </div>
       {groepen.length === 0 ? (
-        <p className="text-sm text-gray-500 dark:text-white/50 text-center py-8">Nog geen uitgaves toegevoegd.</p>
+        <p className="text-sm text-gray-500 dark:text-white/50 text-center py-8">{t.dashboard.nogGeenUitgaves}</p>
       ) : (
         <div className="space-y-3">
           {groepen.map(([cat, bedrag]) => {
@@ -155,6 +169,7 @@ function UitgavesCard({ items }: { items: UitgaveItem[] }) {
 }
 
 function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; inkomstenTotaal: number }) {
+  const { t } = useLanguage();
   const C = 2 * Math.PI * 46;
   const totaalUitgaves = uitgaves.reduce((s, i) => s + i.bedrag, 0);
 
@@ -182,7 +197,7 @@ function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; 
 
   return (
     <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
-      <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-5">Budget verdeling</h3>
+      <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-5">{t.dashboard.budgetVerdeling}</h3>
       <div className="flex items-center gap-8">
         <div className="relative shrink-0">
           <svg width="120" height="120" viewBox="0 0 120 120">
@@ -210,7 +225,7 @@ function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; 
 
         <div className="space-y-2.5 flex-1">
           {noData ? (
-            <p className="text-sm text-gray-500 dark:text-white/50">Voeg inkomsten en uitgaves toe.</p>
+            <p className="text-sm text-gray-500 dark:text-white/50">{t.dashboard.nogInTeVullen}</p>
           ) : (
             segmentsWithStart.map((seg, i) => (
               <div key={i} className="flex items-center justify-between">
