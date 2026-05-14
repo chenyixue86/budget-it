@@ -95,6 +95,12 @@ export default function LoginPage() {
             Registreer hier
           </a>
         </p>
+
+        <div className="text-center mt-4">
+          <Link href="/" className="text-white/30 hover:text-white/60 text-xs transition-colors">
+            ← Terug naar home
+          </Link>
+        </div>
       </div>
     </div>
   );
