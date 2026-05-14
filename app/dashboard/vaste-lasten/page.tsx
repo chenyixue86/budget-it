@@ -17,6 +17,7 @@ export default function VasteLastenPage() {
   const [bedrag, setBedrag] = useState("");
   const [categorie, setCategorie] = useState("Overig");
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const { data } = await supabase
@@ -38,17 +39,22 @@ export default function VasteLastenPage() {
     e.preventDefault();
     if (!naam.trim() || !bedrag || !userId) return;
     setSaving(true);
-    await supabase.from("vaste_lasten").insert({
+    setError(null);
+    const { error: err } = await supabase.from("vaste_lasten").insert({
       user_id: userId,
       naam: naam.trim(),
       bedrag: parseFloat(bedrag),
       categorie,
     });
-    setNaam("");
-    setBedrag("");
-    setCategorie("Overig");
+    if (err) {
+      setError(err.message);
+    } else {
+      setNaam("");
+      setBedrag("");
+      setCategorie("Overig");
+      load();
+    }
     setSaving(false);
-    load();
   }
 
   async function remove(id: string) {
@@ -112,6 +118,9 @@ export default function VasteLastenPage() {
                 className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors"
               />
             </div>
+            {error && (
+              <p className="text-xs text-red-500 bg-red-50 dark:bg-red-500/10 rounded-xl px-3 py-2">{error}</p>
+            )}
             <button
               type="submit"
               disabled={saving}
