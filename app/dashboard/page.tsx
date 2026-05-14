@@ -15,7 +15,7 @@ function fmt(n: number) {
 
 export default function Dashboard() {
   const supabase = createClient();
-  const [activeMonth, setActiveMonth] = useState("Apr");
+  const activeMonth = MONTHS[new Date().getMonth()];
   const [inkomstenTotaal, setInkomstenTotaal] = useState<number | null>(null);
   const [vasteLastenTotaal, setVasteLastenTotaal] = useState<number | null>(null);
   const [uitgaves, setUitgaves] = useState<UitgaveItem[]>([]);
@@ -59,11 +59,11 @@ export default function Dashboard() {
           {MONTHS.map((m) => (
             <button
               key={m}
-              onClick={() => setActiveMonth(m)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+              disabled
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg cursor-default ${
                 activeMonth === m
                   ? "bg-[#2d6a4f] text-white"
-                  : "text-gray-500 dark:text-white/50 hover:text-gray-800 dark:hover:text-white/80"
+                  : "text-gray-500 dark:text-white/50"
               }`}
             >
               {m}
