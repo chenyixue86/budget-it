@@ -14,6 +14,7 @@ export default function OverzichtPage() {
   const supabase = createClient();
   const router = useRouter();
   const [inkomsten, setInkomsten] = useState<Item[]>([]);
+  const [vasteLasten, setVasteLasten] = useState<Item[]>([]);
   const [uitgaves, setUitgaves] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,18 +25,22 @@ export default function OverzichtPage() {
 
     Promise.all([
       supabase.from("inkomsten").select("id, naam, bedrag").order("bedrag", { ascending: false }),
+      supabase.from("vaste_lasten").select("id, naam, bedrag").order("bedrag", { ascending: false }),
       supabase.from("uitgaves").select("id, naam, bedrag").order("bedrag", { ascending: false }),
-    ]).then(([ink, uit]) => {
+    ]).then(([ink, vl, uit]) => {
       if (ink.data) setInkomsten(ink.data);
+      if (vl.data) setVasteLasten(vl.data);
       if (uit.data) setUitgaves(uit.data);
       setLoading(false);
     });
   }, [supabase, router]);
 
   const totaalInkomsten = inkomsten.reduce((s, i) => s + i.bedrag, 0);
+  const totaalVasteLasten = vasteLasten.reduce((s, i) => s + i.bedrag, 0);
   const totaalUitgaves = uitgaves.reduce((s, i) => s + i.bedrag, 0);
-  const over = totaalInkomsten - totaalUitgaves;
-  const uitPct = totaalInkomsten > 0 ? Math.min((totaalUitgaves / totaalInkomsten) * 100, 100) : 0;
+  const over = totaalInkomsten - totaalVasteLasten - totaalUitgaves;
+  const uitgegeven = totaalVasteLasten + totaalUitgaves;
+  const uitPct = totaalInkomsten > 0 ? Math.min((uitgegeven / totaalInkomsten) * 100, 100) : 0;
 
   if (loading) {
     return (
@@ -68,6 +73,29 @@ export default function OverzichtPage() {
           ) : (
             <div className="divide-y divide-gray-50 dark:divide-white/5">
               {inkomsten.map((item) => (
+                <div key={item.id} className="flex items-center justify-between px-5 py-3">
+                  <span className="text-sm text-gray-600 dark:text-white/60">{item.naam}</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">€ {fmt(item.bedrag)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Vaste Lasten */}
+        <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 overflow-hidden transition-colors duration-200">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50 dark:border-white/5">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-red-300" />
+              <span className="text-sm font-semibold text-gray-800 dark:text-white/80">Vaste Lasten</span>
+            </div>
+            <span className="text-sm font-bold text-red-400">− € {fmt(totaalVasteLasten)}</span>
+          </div>
+          {vasteLasten.length === 0 ? (
+            <p className="text-sm text-gray-500 dark:text-white/50 text-center py-6">Geen vaste lasten toegevoegd.</p>
+          ) : (
+            <div className="divide-y divide-gray-50 dark:divide-white/5">
+              {vasteLasten.map((item) => (
                 <div key={item.id} className="flex items-center justify-between px-5 py-3">
                   <span className="text-sm text-gray-600 dark:text-white/60">{item.naam}</span>
                   <span className="text-sm font-medium text-gray-900 dark:text-white">€ {fmt(item.bedrag)}</span>
@@ -116,7 +144,7 @@ export default function OverzichtPage() {
           </div>
           <div>
             <div className="flex justify-between text-xs text-gray-600 dark:text-white/60 mb-1.5">
-              <span>{uitPct.toFixed(0)}% van inkomen uitgegeven</span>
+              <span>{uitPct.toFixed(0)}% van inkomen besteed</span>
               <span>{(100 - uitPct).toFixed(0)}% over</span>
             </div>
             <div className="h-2.5 bg-white/70 dark:bg-white/10 rounded-full overflow-hidden">
