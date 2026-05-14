@@ -3,13 +3,11 @@
 import { useState } from "react";
 import SidebarNav from "./SidebarNav";
 import DashboardHeader from "./DashboardHeader";
-import { LanguageProvider } from "@/lib/i18n";
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <LanguageProvider>
     <div className="flex h-screen bg-[#f5f6f8] dark:bg-[#0a0a0a] font-sans overflow-hidden transition-colors duration-200">
       {/* Mobile backdrop */}
       {sidebarOpen && (
@@ -26,6 +24,5 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         <main className="flex-1 overflow-y-auto p-4 md:p-8">{children}</main>
       </div>
     </div>
-    </LanguageProvider>
   );
 }

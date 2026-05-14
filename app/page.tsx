@@ -1,9 +1,13 @@
+"use client";
+
 import LandingNavbar from "./components/LandingNavbar";
 import BugReportForm from "./components/BugReportForm";
 import ComparisonSection from "./components/ComparisonSection";
 import DashboardMockup from "./components/DashboardMockup";
+import { useLanguage } from "@/lib/i18n";
 
 export default function Home() {
+  const { t } = useLanguage();
   return (
     <main className="flex flex-col min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white transition-colors duration-200">
       <LandingNavbar />
@@ -23,17 +27,16 @@ function Hero() {
 
       <div className="hero-badge inline-flex items-center gap-2 bg-green-500/10 dark:bg-green-400/10 border border-green-500/20 dark:border-green-400/20 text-green-600 dark:text-green-400 text-xs font-medium px-3 py-1.5 rounded-full mb-8">
         <span className="w-1.5 h-1.5 bg-green-500 dark:bg-green-400 rounded-full animate-pulse" />
-        100% gratis, altijd
+        {t.landing.badge}
       </div>
 
       <h1 className="hero-h1 text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] max-w-3xl mb-6 text-gray-900 dark:text-white">
-        Jouw budget,<br />
-        <span className="text-green-500 dark:text-green-400">onder controle.</span>
+        {t.landing.heroTitle}<br />
+        <span className="text-green-500 dark:text-green-400">{t.landing.heroAccent}</span>
       </h1>
 
       <p className="hero-sub text-gray-600 dark:text-white/65 text-lg md:text-xl max-w-xl mb-10 leading-relaxed">
-        Voer je inkomsten, uitgaves en vaste lasten in.
-        budget-it berekent alles automatisch en geeft je een helder overzicht.
+        {t.landing.heroSub}
       </p>
 
       <div className="hero-cta flex flex-col sm:flex-row gap-3">
@@ -41,13 +44,13 @@ function Hero() {
           href="/login"
           className="btn-primary text-black font-semibold px-7 py-3.5 rounded-xl text-sm"
         >
-          Login →
+          {t.landing.loginBtn}
         </a>
         <a
           href="#how-it-works"
           className="btn-secondary text-gray-600 dark:text-white/70 font-medium px-7 py-3.5 rounded-xl text-sm"
         >
-          Hoe het werkt
+          {t.landing.howItWorksBtn}
         </a>
       </div>
 
@@ -59,24 +62,20 @@ function Hero() {
 }
 
 function HowItWorks() {
-  const steps = [
-    { num: "01", title: "Vul in", desc: "Voer je inkomsten en alle uitgaves in. Eenmalig instellen, altijd up-to-date." },
-    { num: "02", title: "Berekenen", desc: "budget-it doet de som automatisch. Geen rekenmachine nodig." },
-    { num: "03", title: "Overzicht", desc: "Zie precies hoeveel je overhoudt en waar je op kunt besparen." },
-  ];
+  const { t } = useLanguage();
 
   return (
     <section id="how-it-works" className="py-24 px-6 border-t border-gray-100 dark:border-white/5">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">Hoe het werkt</p>
+          <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">{t.landing.howItWorksLabel}</p>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-            In 3 stappen klaar
+            {t.landing.howItWorksTitle}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {steps.map((step) => (
+          {t.landing.steps.map((step) => (
             <div key={step.num} className="flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-2xl bg-green-500/10 dark:bg-green-400/10 border border-green-500/20 dark:border-green-400/20 flex items-center justify-center text-green-600 dark:text-green-400 font-bold text-lg mb-6">
                 {step.num}
@@ -92,16 +91,17 @@ function HowItWorks() {
 }
 
 function BugReport() {
+  const { t } = useLanguage();
   return (
     <section id="bugs" className="py-24 px-6 border-t border-gray-100 dark:border-white/5">
       <div className="max-w-xl mx-auto">
         <div className="mb-8">
-          <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">Feedback</p>
+          <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">{t.landing.feedbackLabel}</p>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-2 text-gray-900 dark:text-white">
-            Bug gevonden?
+            {t.landing.bugTitle}
           </h2>
           <p className="text-gray-600 dark:text-white/60 text-sm leading-relaxed">
-            Dit is een persoonlijk project. Zie je iets niet kloppen of heb je een suggestie? Laat het weten.
+            {t.landing.bugSub}
           </p>
         </div>
         <BugReportForm />
@@ -111,6 +111,7 @@ function BugReport() {
 }
 
 function Footer() {
+  const { t } = useLanguage();
   return (
     <footer className="border-t border-gray-100 dark:border-white/5 py-8 px-6">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
@@ -118,11 +119,11 @@ function Footer() {
           budget<span className="text-green-500 dark:text-green-400">-it</span>
         </span>
         <div className="flex items-center gap-6 md:hidden">
-          <a href="#how-it-works" className="text-sm text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white transition-colors">Hoe het werkt</a>
+          <a href="#how-it-works" className="text-sm text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white transition-colors">{t.landing.howItWorksLabel}</a>
           <a href="/changelog" className="text-sm text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white transition-colors">Changelog</a>
         </div>
         <p className="text-gray-500 dark:text-white/50 text-sm hidden md:block">
-          Gemaakt voor iedereen die grip wil op hun geld.
+          {t.landing.footerTagline}
         </p>
         <p className="text-gray-400 dark:text-white/40 text-xs">© 2025 budget-it</p>
       </div>

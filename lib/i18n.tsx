@@ -98,6 +98,26 @@ const translations = {
       vanInkomenBesteed: "% van inkomen besteed",
       over: "% over",
     },
+    // Landing page
+    landing: {
+      badge: "100% gratis, altijd",
+      heroTitle: "Jouw budget,",
+      heroAccent: "onder controle.",
+      heroSub: "Voer je inkomsten, uitgaves en vaste lasten in. budget-it berekent alles automatisch en geeft je een helder overzicht.",
+      loginBtn: "Login →",
+      howItWorksBtn: "Hoe het werkt",
+      howItWorksLabel: "Hoe het werkt",
+      howItWorksTitle: "In 3 stappen klaar",
+      steps: [
+        { num: "01", title: "Vul in", desc: "Voer je inkomsten en alle uitgaves in. Eenmalig instellen, altijd up-to-date." },
+        { num: "02", title: "Berekenen", desc: "budget-it doet de som automatisch. Geen rekenmachine nodig." },
+        { num: "03", title: "Overzicht", desc: "Zie precies hoeveel je overhoudt en waar je op kunt besparen." },
+      ],
+      feedbackLabel: "Feedback",
+      bugTitle: "Bug gevonden?",
+      bugSub: "Dit is een persoonlijk project. Zie je iets niet kloppen of heb je een suggestie? Laat het weten.",
+      footerTagline: "Gemaakt voor iedereen die grip wil op hun geld.",
+    },
     // Common
     common: {
       verwijder: "Verwijder",
@@ -190,6 +210,26 @@ const translations = {
       watJeOverhoudt: "What you keep",
       vanInkomenBesteed: "% of income spent",
       over: "% left",
+    },
+    // Landing page
+    landing: {
+      badge: "100% free, always",
+      heroTitle: "Your budget,",
+      heroAccent: "under control.",
+      heroSub: "Enter your income, expenses and fixed costs. budget-it calculates everything automatically and gives you a clear overview.",
+      loginBtn: "Login →",
+      howItWorksBtn: "How it works",
+      howItWorksLabel: "How it works",
+      howItWorksTitle: "Ready in 3 steps",
+      steps: [
+        { num: "01", title: "Fill in", desc: "Enter your income and all expenses. Set up once, always up-to-date." },
+        { num: "02", title: "Calculate", desc: "budget-it does the math automatically. No calculator needed." },
+        { num: "03", title: "Overview", desc: "See exactly how much you have left and where you can save." },
+      ],
+      feedbackLabel: "Feedback",
+      bugTitle: "Found a bug?",
+      bugSub: "This is a personal project. See something wrong or have a suggestion? Let us know.",
+      footerTagline: "Made for everyone who wants control over their money.",
     },
     common: {
       verwijder: "Delete",
