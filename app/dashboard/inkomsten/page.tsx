@@ -3,12 +3,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useLanguage } from "@/lib/i18n";
 
 type Inkomen = { id: string; naam: string; bedrag: number };
 
 export default function InkomstenPage() {
   const supabase = createClient();
   const router = useRouter();
+  const { t } = useLanguage();
   const [items, setItems] = useState<Inkomen[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [naam, setNaam] = useState("");
@@ -56,12 +58,12 @@ export default function InkomstenPage() {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Inkomsten</h1>
-        <p className="text-gray-600 dark:text-white/60 mt-1 text-sm">Voeg je maandelijkse inkomensbronnen toe.</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t.inkomsten.title}</h1>
+        <p className="text-gray-600 dark:text-white/60 mt-1 text-sm">{t.inkomsten.subtitle}</p>
       </div>
 
       <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 mb-6 transition-colors duration-200">
-        <p className="text-sm text-gray-600 dark:text-white/60 mb-1">Totaal per maand</p>
+        <p className="text-sm text-gray-600 dark:text-white/60 mb-1">{t.inkomsten.totaalPerMaand}</p>
         <p className="text-4xl font-bold text-gray-900 dark:text-white">
           € {totaal.toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </p>
@@ -69,21 +71,21 @@ export default function InkomstenPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
-          <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">Inkomen toevoegen</h3>
+          <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">{t.inkomsten.toevoegen}</h3>
           <form onSubmit={add} className="space-y-3">
             <div>
-              <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">Omschrijving</label>
+              <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">{t.inkomsten.omschrijving}</label>
               <input
                 type="text"
                 value={naam}
                 onChange={(e) => setNaam(e.target.value)}
-                placeholder="Salaris"
+                placeholder={t.inkomsten.placeholder}
                 required
                 className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">Bedrag per maand (€)</label>
+              <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">{t.inkomsten.bedragLabel}</label>
               <input
                 type="number"
                 value={bedrag}
@@ -100,15 +102,15 @@ export default function InkomstenPage() {
               disabled={saving}
               className="w-full bg-[#2d6a4f] text-white font-medium py-2.5 rounded-xl text-sm hover:bg-[#1f4d39] transition-colors disabled:opacity-50"
             >
-              {saving ? "Opslaan..." : "Toevoegen →"}
+              {saving ? t.inkomsten.opslaan : t.inkomsten.toevoegenBtn}
             </button>
           </form>
         </div>
 
         <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
-          <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">Inkomensbronnen</h3>
+          <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">{t.inkomsten.bronnen}</h3>
           {items.length === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-white/50 text-center py-8">Nog geen inkomsten toegevoegd.</p>
+            <p className="text-sm text-gray-500 dark:text-white/50 text-center py-8">{t.inkomsten.leeg}</p>
           ) : (
             <div className="space-y-2">
               {items.map((item) => (
@@ -121,7 +123,7 @@ export default function InkomstenPage() {
                     <button
                       onClick={() => remove(item.id)}
                       className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors"
-                      aria-label="Verwijder"
+                      aria-label={t.common.verwijder}
                     >
                       <TrashIcon />
                     </button>

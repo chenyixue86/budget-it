@@ -5,15 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useTheme } from "@/app/components/ThemeProvider";
-
-const LABELS: Record<string, string> = {
-  "/dashboard": "Home",
-  "/dashboard/inkomsten": "Inkomsten",
-  "/dashboard/uitgaves": "Uitgaves",
-  "/dashboard/vaste-lasten": "Vaste Lasten",
-  "/dashboard/overzicht": "Overzicht",
-  "/dashboard/instellingen": "Instellingen",
-};
+import { useLanguage } from "@/lib/i18n";
 
 export default function DashboardHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
   const pathname = usePathname();
@@ -22,7 +14,17 @@ export default function DashboardHeader({ onMenuToggle }: { onMenuToggle?: () =>
   const [open, setOpen] = useState(false);
   const supabase = createClient();
   const { dark, toggle } = useTheme();
+  const { t, lang, setLang } = useLanguage();
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const LABELS: Record<string, string> = {
+    "/dashboard": t.nav.home,
+    "/dashboard/inkomsten": t.nav.inkomsten,
+    "/dashboard/uitgaves": t.nav.uitgaves,
+    "/dashboard/vaste-lasten": t.nav.vasteLasten,
+    "/dashboard/overzicht": t.nav.overzicht,
+    "/dashboard/instellingen": t.nav.instellingen,
+  };
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -65,6 +67,12 @@ export default function DashboardHeader({ onMenuToggle }: { onMenuToggle?: () =>
           aria-label="Toggle dark mode"
         >
           {dark ? <SunIcon /> : <MoonIcon />}
+        </button>
+        <button
+          onClick={() => setLang(lang === "nl" ? "en" : "nl")}
+          className="text-xs font-semibold text-gray-500 dark:text-white/50 hover:text-gray-800 dark:hover:text-white/80 border border-gray-200 dark:border-white/10 rounded-lg px-2 py-1 transition-colors"
+        >
+          {lang === "nl" ? "EN" : "NL"}
         </button>
         <button className="text-gray-400 dark:text-white/40 hover:text-gray-600 dark:hover:text-white/70 transition-colors">
           <BellIcon />

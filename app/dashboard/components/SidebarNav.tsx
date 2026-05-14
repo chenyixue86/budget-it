@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const NAV_ITEMS = [
-  { href: "/dashboard", label: "Home", Icon: HomeIcon, comingSoon: false },
-  { href: "/dashboard/inkomsten", label: "Inkomsten", Icon: InkomenIcon, comingSoon: false },
-  { href: "/dashboard/uitgaves", label: "Uitgaves", Icon: UitgavesIcon, comingSoon: false },
-  { href: "/dashboard/vaste-lasten", label: "Vaste Lasten", Icon: VasteLastenIcon, comingSoon: false },
-  { href: "/dashboard/overzicht", label: "Overzicht", Icon: OverzichtIcon, comingSoon: false },
-  { href: "/dashboard/instellingen", label: "Instellingen", Icon: InstellingenIcon, comingSoon: false },
-];
+import { useLanguage } from "@/lib/i18n";
 
 interface Props {
   isOpen: boolean;
@@ -19,6 +11,16 @@ interface Props {
 
 export default function SidebarNav({ isOpen, onClose }: Props) {
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const NAV_ITEMS = [
+    { href: "/dashboard", label: t.nav.home, Icon: HomeIcon, comingSoon: false },
+    { href: "/dashboard/inkomsten", label: t.nav.inkomsten, Icon: InkomenIcon, comingSoon: false },
+    { href: "/dashboard/uitgaves", label: t.nav.uitgaves, Icon: UitgavesIcon, comingSoon: false },
+    { href: "/dashboard/vaste-lasten", label: t.nav.vasteLasten, Icon: VasteLastenIcon, comingSoon: false },
+    { href: "/dashboard/overzicht", label: t.nav.overzicht, Icon: OverzichtIcon, comingSoon: false },
+    { href: "/dashboard/instellingen", label: t.nav.instellingen, Icon: InstellingenIcon, comingSoon: false },
+  ];
 
   return (
     <aside
@@ -52,7 +54,7 @@ export default function SidebarNav({ isOpen, onClose }: Props) {
               >
                 <Icon active={false} />
                 {label}
-                <span className="ml-auto text-[10px] font-medium text-gray-400 dark:text-white/30">coming soon</span>
+                <span className="ml-auto text-[10px] font-medium text-gray-400 dark:text-white/30">{t.nav.comingSoon}</span>
               </div>
             );
           }
