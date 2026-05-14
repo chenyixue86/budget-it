@@ -1,6 +1,11 @@
 import LandingNavbar from "../components/LandingNavbar";
 
-const UPCOMING: { title: string; description: string }[] = [];
+const UPCOMING: { title: string; description: string }[] = [
+  {
+    title: "Spaardoel",
+    description: "Stel in hoeveel je wilt sparen per maand en zie direct hoeveel je nog kunt uitgeven.",
+  },
+];
 
 const RELEASES: {
   version: string;
