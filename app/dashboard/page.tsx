@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [inkomstenTotaal, setInkomstenTotaal] = useState<number | null>(null);
   const [vasteLastenTotaal, setVasteLastenTotaal] = useState<number | null>(null);
   const [uitgaves, setUitgaves] = useState<UitgaveItem[]>([]);
+  const [spaardoel, setSpaardoel] = useState<number | null>(null);
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
@@ -38,6 +39,10 @@ export default function Dashboard() {
 
     supabase.from("uitgaves").select("id, naam, bedrag, categorie").order("created_at").then(({ data }) => {
       if (data) setUitgaves(data);
+    });
+
+    supabase.from("user_settings").select("spaardoel").single().then(({ data }) => {
+      if (data?.spaardoel) setSpaardoel(data.spaardoel);
     });
   }, [supabase]);
 
@@ -73,7 +78,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-4 md:mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-4 md:mb-6">
         <StatCard label={t.dashboard.inkomsten} value={inkStr} sub={t.dashboard.perMaand} trend={t.dashboard.totaalInkomen} positive />
         <StatCard
           label={t.dashboard.vasteLasten}
@@ -88,6 +93,17 @@ export default function Dashboard() {
           sub={t.dashboard.resterend}
           trend={inkomstenTotaal && vasteLastenTotaal ? t.dashboard.naVasteLasten : t.dashboard.nogInTeVullen}
           positive
+        />
+        <StatCard
+          label={t.dashboard.spaardoel}
+          value={spaardoel ? fmt(spaardoel) : "−"}
+          sub={t.dashboard.maanddoel}
+          trend={
+            spaardoel === null ? t.dashboard.spaardoelNietIngesteld
+            : vrijStr === "..." ? t.dashboard.laden
+            : (inkomstenTotaal ?? 0) - (vasteLastenTotaal ?? 0) >= spaardoel ? t.dashboard.opSchema : t.dashboard.nietOpSchema
+          }
+          positive={spaardoel !== null && (inkomstenTotaal ?? 0) - (vasteLastenTotaal ?? 0) >= spaardoel}
         />
       </div>
 

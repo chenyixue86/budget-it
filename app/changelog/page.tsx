@@ -11,7 +11,8 @@ const TYPE_STYLES = {
 
 export default function ChangelogPage() {
   const { t } = useLanguage();
-  const { badge, title, subtitle, binnenkort, binnenkortBadge, typeLabels, upcoming, releases } = t.changelog;
+  const { badge, title, subtitle, binnenkort, binnenkortBadge, typeLabels, releases } = t.changelog;
+  const upcoming = t.changelog.upcoming as { title: string; description: string }[];
 
   return (
     <main className="flex flex-col min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white transition-colors duration-200">
