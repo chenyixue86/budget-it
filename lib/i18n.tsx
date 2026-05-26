@@ -198,7 +198,7 @@ const translations = {
       releases: [
         {
           version: "v0.1.2",
-          date: "29 Mei 2026",
+          date: "26 Mei 2026",
           label: "",
           changes: [
             { type: "new", text: "Spaardoel — stel in hoeveel je per maand wilt sparen en zie direct op het dashboard of je op schema ligt" },
@@ -417,7 +417,7 @@ const translations = {
       releases: [
         {
           version: "v0.1.2",
-          date: "29 May 2026",
+          date: "26 May 2026",
           label: "",
           changes: [
             { type: "new", text: "Savings goal — set how much you want to save per month and see on the dashboard if you're on track" },
