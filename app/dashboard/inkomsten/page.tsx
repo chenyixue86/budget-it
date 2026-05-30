@@ -17,6 +17,11 @@ export default function InkomstenPage() {
   const [bedrag, setBedrag] = useState("");
   const [saving, setSaving] = useState(false);
 
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editNaam, setEditNaam] = useState("");
+  const [editBedrag, setEditBedrag] = useState("");
+  const [editSaving, setEditSaving] = useState(false);
+
   const load = useCallback(async () => {
     const { data } = await supabase
       .from("inkomsten")
@@ -51,6 +56,28 @@ export default function InkomstenPage() {
   async function remove(id: string) {
     await supabase.from("inkomsten").delete().eq("id", id);
     setItems((prev) => prev.filter((i) => i.id !== id));
+  }
+
+  function startEdit(item: Inkomen) {
+    setEditingId(item.id);
+    setEditNaam(item.naam);
+    setEditBedrag(String(item.bedrag));
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+  }
+
+  async function saveEdit(id: string) {
+    if (!editNaam.trim() || !editBedrag) return;
+    setEditSaving(true);
+    await supabase.from("inkomsten").update({
+      naam: editNaam.trim(),
+      bedrag: parseFloat(editBedrag),
+    }).eq("id", id);
+    setEditSaving(false);
+    setEditingId(null);
+    load();
   }
 
   const totaal = items.reduce((s, i) => s + i.bedrag, 0);
@@ -113,28 +140,80 @@ export default function InkomstenPage() {
             <p className="text-sm text-gray-500 dark:text-white/50 text-center py-8">{t.inkomsten.leeg}</p>
           ) : (
             <div className="space-y-2">
-              {items.map((item) => (
-                <div key={item.id} className="flex items-center justify-between py-2.5 px-3 bg-gray-50 dark:bg-white/5 rounded-xl">
-                  <span className="text-sm text-gray-700 dark:text-white/70">{item.naam}</span>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                      € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
-                    </span>
-                    <button
-                      onClick={() => remove(item.id)}
-                      className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors"
-                      aria-label={t.common.verwijder}
-                    >
-                      <TrashIcon />
-                    </button>
+              {items.map((item) =>
+                editingId === item.id ? (
+                  <div key={item.id} className="py-2.5 px-3 bg-[#f0faf4] dark:bg-[#52b788]/5 rounded-xl border border-[#52b788]/20 space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={editNaam}
+                        onChange={(e) => setEditNaam(e.target.value)}
+                        className="flex-1 min-w-0 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
+                      />
+                      <input
+                        type="number"
+                        value={editBedrag}
+                        onChange={(e) => setEditBedrag(e.target.value)}
+                        min="0"
+                        step="0.01"
+                        className="w-24 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
+                      />
+                    </div>
+                    <div className="flex gap-2 justify-end">
+                      <button
+                        onClick={cancelEdit}
+                        className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                      >
+                        {t.common.annuleren}
+                      </button>
+                      <button
+                        onClick={() => saveEdit(item.id)}
+                        disabled={editSaving}
+                        className="text-xs px-3 py-1.5 rounded-lg bg-[#2d6a4f] text-white hover:bg-[#1f4d39] transition-colors disabled:opacity-50"
+                      >
+                        {editSaving ? "..." : t.common.opslaan}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ) : (
+                  <div key={item.id} className="flex items-center justify-between py-2.5 px-3 bg-gray-50 dark:bg-white/5 rounded-xl">
+                    <span className="text-sm text-gray-700 dark:text-white/70">{item.naam}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                        € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
+                      </span>
+                      <button
+                        onClick={() => startEdit(item)}
+                        className="text-gray-400 dark:text-white/40 hover:text-[#2d6a4f] dark:hover:text-[#52b788] transition-colors"
+                        aria-label={t.common.bewerken}
+                      >
+                        <EditIcon />
+                      </button>
+                      <button
+                        onClick={() => remove(item.id)}
+                        className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors"
+                        aria-label={t.common.verwijder}
+                      >
+                        <TrashIcon />
+                      </button>
+                    </div>
+                  </div>
+                )
+              )}
             </div>
           )}
         </div>
       </div>
     </>
+  );
+}
+
+function EditIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+    </svg>
   );
 }
 

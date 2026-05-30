@@ -231,6 +231,9 @@ const translations = {
     // Common
     common: {
       verwijder: "Verwijder",
+      bewerken: "Bewerken",
+      annuleren: "Annuleer",
+      opslaan: "Opslaan",
     },
   },
 
@@ -451,6 +454,9 @@ const translations = {
     },
     common: {
       verwijder: "Delete",
+      bewerken: "Edit",
+      annuleren: "Cancel",
+      opslaan: "Save",
     },
   },
 };

@@ -39,6 +39,13 @@ export default function UitgavesPage() {
   const [vastCategorie, setVastCategorie] = useState<string>(t.vasteLasten.categories[6]);
   const [vastSaving, setVastSaving] = useState(false);
 
+  // Edit state (shared — only one item editable at a time)
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editNaam, setEditNaam] = useState("");
+  const [editBedrag, setEditBedrag] = useState("");
+  const [editCategorie, setEditCategorie] = useState("");
+  const [editSaving, setEditSaving] = useState(false);
+
   const maandLabel = new Intl.DateTimeFormat(lang === "nl" ? "nl-NL" : "en-US", {
     month: "long",
     year: "numeric",
@@ -136,6 +143,43 @@ export default function UitgavesPage() {
     setVastItems((prev) => prev.filter((i) => i.id !== id));
   }
 
+  function startEdit(item: Item) {
+    setEditingId(item.id);
+    setEditNaam(item.naam);
+    setEditBedrag(String(item.bedrag));
+    setEditCategorie(item.categorie);
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+  }
+
+  async function saveEditVar(id: string) {
+    if (!editNaam.trim() || !editBedrag) return;
+    setEditSaving(true);
+    await supabase.from("uitgaves").update({
+      naam: editNaam.trim(),
+      bedrag: parseFloat(editBedrag),
+      categorie: editCategorie,
+    }).eq("id", id);
+    setEditSaving(false);
+    setEditingId(null);
+    loadVar();
+  }
+
+  async function saveEditVast(id: string) {
+    if (!editNaam.trim() || !editBedrag) return;
+    setEditSaving(true);
+    await supabase.from("vaste_lasten").update({
+      naam: editNaam.trim(),
+      bedrag: parseFloat(editBedrag),
+      categorie: editCategorie,
+    }).eq("id", id);
+    setEditSaving(false);
+    setEditingId(null);
+    loadVast();
+  }
+
   const totaal = activeTab === "variabel"
     ? varItems.reduce((s, i) => s + i.bedrag, 0)
     : vastItems.reduce((s, i) => s + i.bedrag, 0);
@@ -151,7 +195,7 @@ export default function UitgavesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div className="flex items-center gap-1 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl p-1 self-start">
           <button
-            onClick={() => setActiveTab("variabel")}
+            onClick={() => { setActiveTab("variabel"); cancelEdit(); }}
             className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${
               activeTab === "variabel"
                 ? "bg-[#2d6a4f] text-white"
@@ -161,7 +205,7 @@ export default function UitgavesPage() {
             {t.uitgaves.tabVariabel}
           </button>
           <button
-            onClick={() => setActiveTab("vast")}
+            onClick={() => { setActiveTab("vast"); cancelEdit(); }}
             className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${
               activeTab === "vast"
                 ? "bg-[#2d6a4f] text-white"
@@ -261,26 +305,63 @@ export default function UitgavesPage() {
                 <p className="text-sm text-gray-500 dark:text-white/50 text-center py-8">{t.uitgaves.leeg}</p>
               ) : (
                 <div className="space-y-2">
-                  {varItems.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between py-2.5 px-3 bg-gray-50 dark:bg-white/5 rounded-xl">
-                      <div>
-                        <span className="text-sm text-gray-700 dark:text-white/70">{item.naam}</span>
-                        <span className="text-xs text-gray-400 dark:text-white/30 block">{item.categorie}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                          € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
-                        </span>
-                        <button
-                          onClick={() => removeVar(item.id)}
-                          className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors"
-                          aria-label={t.common.verwijder}
+                  {varItems.map((item) =>
+                    editingId === item.id ? (
+                      <div key={item.id} className="py-2.5 px-3 bg-[#f0faf4] dark:bg-[#52b788]/5 rounded-xl border border-[#52b788]/20 space-y-2">
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={editNaam}
+                            onChange={(e) => setEditNaam(e.target.value)}
+                            className="flex-1 min-w-0 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
+                          />
+                          <input
+                            type="number"
+                            value={editBedrag}
+                            onChange={(e) => setEditBedrag(e.target.value)}
+                            min="0"
+                            step="0.01"
+                            className="w-24 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
+                          />
+                        </div>
+                        <select
+                          value={editCategorie}
+                          onChange={(e) => setEditCategorie(e.target.value)}
+                          className="w-full border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors appearance-none cursor-pointer"
                         >
-                          <TrashIcon />
-                        </button>
+                          {t.uitgaves.categories.map((c) => (
+                            <option key={c} value={c}>{c}</option>
+                          ))}
+                        </select>
+                        <div className="flex gap-2 justify-end">
+                          <button onClick={cancelEdit} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                            {t.common.annuleren}
+                          </button>
+                          <button onClick={() => saveEditVar(item.id)} disabled={editSaving} className="text-xs px-3 py-1.5 rounded-lg bg-[#2d6a4f] text-white hover:bg-[#1f4d39] transition-colors disabled:opacity-50">
+                            {editSaving ? "..." : t.common.opslaan}
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ) : (
+                      <div key={item.id} className="flex items-center justify-between py-2.5 px-3 bg-gray-50 dark:bg-white/5 rounded-xl">
+                        <div>
+                          <span className="text-sm text-gray-700 dark:text-white/70">{item.naam}</span>
+                          <span className="text-xs text-gray-400 dark:text-white/30 block">{item.categorie}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                            € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
+                          </span>
+                          <button onClick={() => startEdit(item)} className="text-gray-400 dark:text-white/40 hover:text-[#2d6a4f] dark:hover:text-[#52b788] transition-colors" aria-label={t.common.bewerken}>
+                            <EditIcon />
+                          </button>
+                          <button onClick={() => removeVar(item.id)} className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors" aria-label={t.common.verwijder}>
+                            <TrashIcon />
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  )}
                 </div>
               )}
             </div>
@@ -342,26 +423,63 @@ export default function UitgavesPage() {
                 <p className="text-sm text-gray-500 dark:text-white/50 text-center py-8">{t.vasteLasten.leeg}</p>
               ) : (
                 <div className="space-y-2">
-                  {vastItems.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between py-2.5 px-3 bg-gray-50 dark:bg-white/5 rounded-xl">
-                      <div>
-                        <span className="text-sm text-gray-700 dark:text-white/70">{item.naam}</span>
-                        <span className="text-xs text-gray-400 dark:text-white/30 block">{item.categorie}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                          € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
-                        </span>
-                        <button
-                          onClick={() => removeVast(item.id)}
-                          className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors"
-                          aria-label={t.common.verwijder}
+                  {vastItems.map((item) =>
+                    editingId === item.id ? (
+                      <div key={item.id} className="py-2.5 px-3 bg-[#f0faf4] dark:bg-[#52b788]/5 rounded-xl border border-[#52b788]/20 space-y-2">
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={editNaam}
+                            onChange={(e) => setEditNaam(e.target.value)}
+                            className="flex-1 min-w-0 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
+                          />
+                          <input
+                            type="number"
+                            value={editBedrag}
+                            onChange={(e) => setEditBedrag(e.target.value)}
+                            min="0"
+                            step="0.01"
+                            className="w-24 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
+                          />
+                        </div>
+                        <select
+                          value={editCategorie}
+                          onChange={(e) => setEditCategorie(e.target.value)}
+                          className="w-full border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors appearance-none cursor-pointer"
                         >
-                          <TrashIcon />
-                        </button>
+                          {t.vasteLasten.categories.map((c) => (
+                            <option key={c} value={c}>{c}</option>
+                          ))}
+                        </select>
+                        <div className="flex gap-2 justify-end">
+                          <button onClick={cancelEdit} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                            {t.common.annuleren}
+                          </button>
+                          <button onClick={() => saveEditVast(item.id)} disabled={editSaving} className="text-xs px-3 py-1.5 rounded-lg bg-[#2d6a4f] text-white hover:bg-[#1f4d39] transition-colors disabled:opacity-50">
+                            {editSaving ? "..." : t.common.opslaan}
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ) : (
+                      <div key={item.id} className="flex items-center justify-between py-2.5 px-3 bg-gray-50 dark:bg-white/5 rounded-xl">
+                        <div>
+                          <span className="text-sm text-gray-700 dark:text-white/70">{item.naam}</span>
+                          <span className="text-xs text-gray-400 dark:text-white/30 block">{item.categorie}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                            € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
+                          </span>
+                          <button onClick={() => startEdit(item)} className="text-gray-400 dark:text-white/40 hover:text-[#2d6a4f] dark:hover:text-[#52b788] transition-colors" aria-label={t.common.bewerken}>
+                            <EditIcon />
+                          </button>
+                          <button onClick={() => removeVast(item.id)} className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors" aria-label={t.common.verwijder}>
+                            <TrashIcon />
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  )}
                 </div>
               )}
             </div>
@@ -384,6 +502,15 @@ function ChevronRight() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="9,18 15,12 9,6" />
+    </svg>
+  );
+}
+
+function EditIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
     </svg>
   );
 }
