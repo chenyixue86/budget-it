@@ -59,7 +59,9 @@ const translations = {
     // Uitgaves page
     uitgaves: {
       title: "Uitgaves",
-      subtitle: "Voeg je maandelijkse uitgaves toe.",
+      subtitle: "Beheer je variabele en vaste uitgaves.",
+      tabVariabel: "Variabel",
+      tabVast: "Vast",
       totaalPerMaand: "Totaal per maand",
       toevoegen: "Uitgave toevoegen",
       omschrijving: "Omschrijving",
@@ -282,7 +284,9 @@ const translations = {
     },
     uitgaves: {
       title: "Expenses",
-      subtitle: "Add your monthly expenses.",
+      subtitle: "Manage your variable and fixed expenses.",
+      tabVariabel: "Variable",
+      tabVast: "Fixed",
       totaalPerMaand: "Total per month",
       toevoegen: "Add expense",
       omschrijving: "Description",

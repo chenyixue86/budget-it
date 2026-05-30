@@ -17,7 +17,6 @@ export default function SidebarNav({ isOpen, onClose }: Props) {
     { href: "/dashboard", label: t.nav.home, Icon: HomeIcon, comingSoon: false },
     { href: "/dashboard/inkomsten", label: t.nav.inkomsten, Icon: InkomenIcon, comingSoon: false },
     { href: "/dashboard/uitgaves", label: t.nav.uitgaves, Icon: UitgavesIcon, comingSoon: false },
-    { href: "/dashboard/vaste-lasten", label: t.nav.vasteLasten, Icon: VasteLastenIcon, comingSoon: false },
     { href: "/dashboard/overzicht", label: t.nav.overzicht, Icon: OverzichtIcon, comingSoon: false },
     { href: "/dashboard/instellingen", label: t.nav.instellingen, Icon: InstellingenIcon, comingSoon: false },
   ];
