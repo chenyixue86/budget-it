@@ -7,10 +7,20 @@ import { useLanguage } from "@/lib/i18n";
 
 type Uitgave = { id: string; naam: string; bedrag: number; categorie: string };
 
+function maandStr(year: number, month: number) {
+  return `${year}-${String(month + 1).padStart(2, "0")}`;
+}
+
 export default function UitgavesPage() {
   const supabase = createClient();
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+
+  const now = new Date();
+  const [activeYear, setActiveYear] = useState(now.getFullYear());
+  const [activeMonthIdx, setActiveMonthIdx] = useState(now.getMonth());
+  const activeMaand = maandStr(activeYear, activeMonthIdx);
+
   const [items, setItems] = useState<Uitgave[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [naam, setNaam] = useState("");
@@ -18,13 +28,40 @@ export default function UitgavesPage() {
   const [categorie, setCategorie] = useState<string>(t.uitgaves.categories[7]);
   const [saving, setSaving] = useState(false);
 
+  const maandLabel = new Intl.DateTimeFormat(lang === "nl" ? "nl-NL" : "en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(activeYear, activeMonthIdx));
+
+  const isCurrentMonth = activeYear === now.getFullYear() && activeMonthIdx === now.getMonth();
+
+  function prevMaand() {
+    if (activeMonthIdx === 0) {
+      setActiveYear((y) => y - 1);
+      setActiveMonthIdx(11);
+    } else {
+      setActiveMonthIdx((m) => m - 1);
+    }
+  }
+
+  function nextMaand() {
+    if (isCurrentMonth) return;
+    if (activeMonthIdx === 11) {
+      setActiveYear((y) => y + 1);
+      setActiveMonthIdx(0);
+    } else {
+      setActiveMonthIdx((m) => m + 1);
+    }
+  }
+
   const load = useCallback(async () => {
     const { data } = await supabase
       .from("uitgaves")
       .select("id, naam, bedrag, categorie")
+      .eq("maand", activeMaand)
       .order("created_at");
     if (data) setItems(data);
-  }, [supabase]);
+  }, [supabase, activeMaand]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -43,6 +80,7 @@ export default function UitgavesPage() {
       naam: naam.trim(),
       bedrag: parseFloat(bedrag),
       categorie,
+      maand: activeMaand,
     });
     setNaam("");
     setBedrag("");
@@ -60,9 +98,29 @@ export default function UitgavesPage() {
 
   return (
     <>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t.uitgaves.title}</h1>
-        <p className="text-gray-600 dark:text-white/60 mt-1 text-sm">{t.uitgaves.subtitle}</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t.uitgaves.title}</h1>
+          <p className="text-gray-600 dark:text-white/60 mt-1 text-sm">{t.uitgaves.subtitle}</p>
+        </div>
+        <div className="flex items-center gap-2 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2">
+          <button
+            onClick={prevMaand}
+            className="p-1 text-gray-500 dark:text-white/50 hover:text-gray-800 dark:hover:text-white transition-colors"
+          >
+            <ChevronLeft />
+          </button>
+          <span className="text-sm font-medium text-gray-700 dark:text-white/70 w-32 text-center capitalize">
+            {maandLabel}
+          </span>
+          <button
+            onClick={nextMaand}
+            disabled={isCurrentMonth}
+            className="p-1 text-gray-500 dark:text-white/50 hover:text-gray-800 dark:hover:text-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+          >
+            <ChevronRight />
+          </button>
+        </div>
       </div>
 
       <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 mb-6 transition-colors duration-200">
@@ -153,6 +211,22 @@ export default function UitgavesPage() {
         </div>
       </div>
     </>
+  );
+}
+
+function ChevronLeft() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="15,18 9,12 15,6" />
+    </svg>
+  );
+}
+
+function ChevronRight() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9,18 15,12 9,6" />
+    </svg>
   );
 }
 

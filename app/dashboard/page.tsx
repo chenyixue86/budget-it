@@ -16,7 +16,13 @@ export default function Dashboard() {
   const supabase = createClient();
   const { t } = useLanguage();
   const months = t.dashboard.months;
-  const activeMonth = months[new Date().getMonth()];
+
+  const now = new Date();
+  const currentMonthIdx = now.getMonth();
+  const currentYear = now.getFullYear();
+  const [activeMonthIdx, setActiveMonthIdx] = useState(currentMonthIdx);
+  const activeMaandStr = `${currentYear}-${String(activeMonthIdx + 1).padStart(2, "0")}`;
+
   const [inkomstenTotaal, setInkomstenTotaal] = useState<number | null>(null);
   const [vasteLastenTotaal, setVasteLastenTotaal] = useState<number | null>(null);
   const [uitgaves, setUitgaves] = useState<UitgaveItem[]>([]);
@@ -28,23 +34,27 @@ export default function Dashboard() {
       const full = user?.user_metadata?.full_name as string | undefined;
       setUserName(full?.split(" ")[0] || user?.email?.split("@")[0] || "");
     });
-
     supabase.from("inkomsten").select("bedrag").then(({ data }) => {
       if (data) setInkomstenTotaal(data.reduce((s: number, i: { bedrag: number }) => s + i.bedrag, 0));
     });
-
     supabase.from("vaste_lasten").select("bedrag").then(({ data }) => {
       if (data) setVasteLastenTotaal(data.reduce((s: number, i: { bedrag: number }) => s + i.bedrag, 0));
     });
-
-    supabase.from("uitgaves").select("id, naam, bedrag, categorie").order("created_at").then(({ data }) => {
-      if (data) setUitgaves(data);
-    });
-
     supabase.from("user_settings").select("spaardoel").single().then(({ data }) => {
       if (data?.spaardoel) setSpaardoel(data.spaardoel);
     });
   }, [supabase]);
+
+  useEffect(() => {
+    supabase
+      .from("uitgaves")
+      .select("id, naam, bedrag, categorie")
+      .eq("maand", activeMaandStr)
+      .order("created_at")
+      .then(({ data }) => {
+        if (data) setUitgaves(data);
+      });
+  }, [supabase, activeMaandStr]);
 
   const inkStr = inkomstenTotaal === null ? "..." : fmt(inkomstenTotaal);
   const vlStr = vasteLastenTotaal === null ? "..." : fmt(vasteLastenTotaal);
@@ -62,19 +72,25 @@ export default function Dashboard() {
           <p className="text-gray-600 dark:text-white/60 mt-1 text-sm">{t.dashboard.subtitle}</p>
         </div>
         <div className="flex items-center gap-1 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl p-1 overflow-x-auto">
-          {months.map((m) => (
-            <button
-              key={m}
-              disabled
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg cursor-default ${
-                activeMonth === m
-                  ? "bg-[#2d6a4f] text-white"
-                  : "text-gray-500 dark:text-white/50"
-              }`}
-            >
-              {m}
-            </button>
-          ))}
+          {months.map((m, idx) => {
+            const isFuture = idx > currentMonthIdx;
+            return (
+              <button
+                key={m}
+                onClick={() => !isFuture && setActiveMonthIdx(idx)}
+                disabled={isFuture}
+                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                  activeMonthIdx === idx
+                    ? "bg-[#2d6a4f] text-white"
+                    : isFuture
+                    ? "text-gray-200 dark:text-white/15 cursor-not-allowed"
+                    : "text-gray-500 dark:text-white/50 hover:text-gray-800 dark:hover:text-white/80 cursor-pointer"
+                }`}
+              >
+                {m}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -238,7 +254,6 @@ function BudgetHealth({ uitgaves, inkomstenTotaal }: { uitgaves: UitgaveItem[]; 
             )}
           </svg>
         </div>
-
         <div className="space-y-2.5 flex-1">
           {noData ? (
             <p className="text-sm text-gray-500 dark:text-white/50">{t.dashboard.nogInTeVullen}</p>
