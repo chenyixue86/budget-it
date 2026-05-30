@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/i18n";
+import { useMonth } from "@/lib/month-context";
 
 type UitgaveItem = { id: string; naam: string; bedrag: number; categorie: string };
 
@@ -15,13 +16,13 @@ function fmt(n: number) {
 export default function Dashboard() {
   const supabase = createClient();
   const { t } = useLanguage();
-  const months = t.dashboard.months;
+  const { activeMonthIdx, activeMaandStr, isCurrentMonth, setActiveMonth } = useMonth();
 
   const now = new Date();
-  const currentMonthIdx = now.getMonth();
   const currentYear = now.getFullYear();
-  const [activeMonthIdx, setActiveMonthIdx] = useState(currentMonthIdx);
-  const activeMaandStr = `${currentYear}-${String(activeMonthIdx + 1).padStart(2, "0")}`;
+  const currentMonthIdx = now.getMonth();
+
+  const months = t.dashboard.months;
 
   const [inkomstenTotaal, setInkomstenTotaal] = useState<number | null>(null);
   const [vasteLastenTotaal, setVasteLastenTotaal] = useState<number | null>(null);
@@ -34,18 +35,31 @@ export default function Dashboard() {
       const full = user?.user_metadata?.full_name as string | undefined;
       setUserName(full?.split(" ")[0] || user?.email?.split("@")[0] || "");
     });
-    supabase.from("inkomsten").select("bedrag").then(({ data }) => {
-      if (data) setInkomstenTotaal(data.reduce((s: number, i: { bedrag: number }) => s + i.bedrag, 0));
-    });
-    supabase.from("vaste_lasten").select("bedrag").then(({ data }) => {
-      if (data) setVasteLastenTotaal(data.reduce((s: number, i: { bedrag: number }) => s + i.bedrag, 0));
-    });
-    supabase.from("user_settings").select("spaardoel").single().then(({ data }) => {
-      if (data?.spaardoel) setSpaardoel(data.spaardoel);
-    });
   }, [supabase]);
 
   useEffect(() => {
+    setInkomstenTotaal(null);
+    setVasteLastenTotaal(null);
+    setSpaardoel(null);
+
+    supabase.from("inkomsten").select("bedrag").eq("maand", activeMaandStr).then(({ data }) => {
+      setInkomstenTotaal(data ? data.reduce((s: number, i: { bedrag: number }) => s + i.bedrag, 0) : 0);
+    });
+
+    supabase.from("vaste_lasten").select("bedrag").eq("maand", activeMaandStr).then(({ data }) => {
+      setVasteLastenTotaal(data ? data.reduce((s: number, i: { bedrag: number }) => s + i.bedrag, 0) : 0);
+    });
+
+    supabase.from("spaardoel_history")
+      .select("bedrag")
+      .lte("maand", activeMaandStr)
+      .order("maand", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => {
+        setSpaardoel(data?.bedrag ?? null);
+      });
+
     supabase
       .from("uitgaves")
       .select("id, naam, bedrag, categorie")
@@ -77,7 +91,7 @@ export default function Dashboard() {
             return (
               <button
                 key={m}
-                onClick={() => !isFuture && setActiveMonthIdx(idx)}
+                onClick={() => !isFuture && setActiveMonth(currentYear, idx)}
                 disabled={isFuture}
                 className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
                   activeMonthIdx === idx

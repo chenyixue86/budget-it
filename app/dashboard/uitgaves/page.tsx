@@ -4,25 +4,19 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/i18n";
+import { useMonth, getPrevMaandStr, getCurrentMaandStr } from "@/lib/month-context";
 
 type Item = { id: string; naam: string; bedrag: number; categorie: string };
 
-function maandStr(year: number, month: number) {
-  return `${year}-${String(month + 1).padStart(2, "0")}`;
-}
+const NOW_MAAND = getCurrentMaandStr();
 
 export default function UitgavesPage() {
   const supabase = createClient();
   const router = useRouter();
   const { t, lang } = useLanguage();
+  const { activeYear, activeMonthIdx, activeMaandStr, isCurrentMonth, goToPrev, goToNext } = useMonth();
 
   const [activeTab, setActiveTab] = useState<"variabel" | "vast">("variabel");
-
-  const now = new Date();
-  const [activeYear, setActiveYear] = useState(now.getFullYear());
-  const [activeMonthIdx, setActiveMonthIdx] = useState(now.getMonth());
-  const activeMaand = maandStr(activeYear, activeMonthIdx);
-
   const [userId, setUserId] = useState<string | null>(null);
 
   // Variabel state
@@ -39,7 +33,7 @@ export default function UitgavesPage() {
   const [vastCategorie, setVastCategorie] = useState<string>(t.vasteLasten.categories[6]);
   const [vastSaving, setVastSaving] = useState(false);
 
-  // Edit state (shared — only one item editable at a time)
+  // Edit state
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editNaam, setEditNaam] = useState("");
   const [editBedrag, setEditBedrag] = useState("");
@@ -51,51 +45,51 @@ export default function UitgavesPage() {
     year: "numeric",
   }).format(new Date(activeYear, activeMonthIdx));
 
-  const isCurrentMonth = activeYear === now.getFullYear() && activeMonthIdx === now.getMonth();
-
-  function prevMaand() {
-    if (activeMonthIdx === 0) {
-      setActiveYear((y) => y - 1);
-      setActiveMonthIdx(11);
-    } else {
-      setActiveMonthIdx((m) => m - 1);
-    }
-  }
-
-  function nextMaand() {
-    if (isCurrentMonth) return;
-    if (activeMonthIdx === 11) {
-      setActiveYear((y) => y + 1);
-      setActiveMonthIdx(0);
-    } else {
-      setActiveMonthIdx((m) => m + 1);
-    }
-  }
-
   const loadVar = useCallback(async () => {
     const { data } = await supabase
       .from("uitgaves")
       .select("id, naam, bedrag, categorie")
-      .eq("maand", activeMaand)
+      .eq("maand", activeMaandStr)
       .order("created_at");
     if (data) setVarItems(data);
-  }, [supabase, activeMaand]);
+  }, [supabase, activeMaandStr]);
 
-  const loadVast = useCallback(async () => {
+  const loadVast = useCallback(async (uid: string | null) => {
     const { data } = await supabase
       .from("vaste_lasten")
       .select("id, naam, bedrag, categorie")
+      .eq("maand", activeMaandStr)
       .order("created_at");
+
+    if (data && data.length === 0 && activeMaandStr > NOW_MAAND && uid) {
+      const prevMaand = getPrevMaandStr(activeMaandStr);
+      const { data: prev } = await supabase
+        .from("vaste_lasten")
+        .select("naam, bedrag, categorie")
+        .eq("maand", prevMaand);
+      if (prev && prev.length > 0) {
+        await supabase.from("vaste_lasten").insert(
+          prev.map((item) => ({ ...item, user_id: uid, maand: activeMaandStr }))
+        );
+        const { data: fresh } = await supabase
+          .from("vaste_lasten")
+          .select("id, naam, bedrag, categorie")
+          .eq("maand", activeMaandStr)
+          .order("created_at");
+        if (fresh) setVastItems(fresh);
+        return;
+      }
+    }
     if (data) setVastItems(data);
-  }, [supabase]);
+  }, [supabase, activeMaandStr]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) { router.push("/login"); return; }
       setUserId(user.id);
+      loadVar();
+      loadVast(user.id);
     });
-    loadVar();
-    loadVast();
   }, [loadVar, loadVast, supabase, router]);
 
   async function addVar(e: React.FormEvent) {
@@ -107,7 +101,7 @@ export default function UitgavesPage() {
       naam: varNaam.trim(),
       bedrag: parseFloat(varBedrag),
       categorie: varCategorie,
-      maand: activeMaand,
+      maand: activeMaandStr,
     });
     setVarNaam("");
     setVarBedrag("");
@@ -130,12 +124,13 @@ export default function UitgavesPage() {
       naam: vastNaam.trim(),
       bedrag: parseFloat(vastBedrag),
       categorie: vastCategorie,
+      maand: activeMaandStr,
     });
     setVastNaam("");
     setVastBedrag("");
     setVastCategorie(t.vasteLasten.categories[6]);
     setVastSaving(false);
-    loadVast();
+    loadVast(userId);
   }
 
   async function removeVast(id: string) {
@@ -177,7 +172,7 @@ export default function UitgavesPage() {
     }).eq("id", id);
     setEditSaving(false);
     setEditingId(null);
-    loadVast();
+    loadVast(userId);
   }
 
   const totaal = activeTab === "variabel"
@@ -216,26 +211,24 @@ export default function UitgavesPage() {
           </button>
         </div>
 
-        {activeTab === "variabel" && (
-          <div className="flex items-center gap-2 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2">
-            <button
-              onClick={prevMaand}
-              className="p-1 text-gray-500 dark:text-white/50 hover:text-gray-800 dark:hover:text-white transition-colors"
-            >
-              <ChevronLeft />
-            </button>
-            <span className="text-sm font-medium text-gray-700 dark:text-white/70 w-32 text-center capitalize">
-              {maandLabel}
-            </span>
-            <button
-              onClick={nextMaand}
-              disabled={isCurrentMonth}
-              className="p-1 text-gray-500 dark:text-white/50 hover:text-gray-800 dark:hover:text-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
-            >
-              <ChevronRight />
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-2 bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2">
+          <button
+            onClick={goToPrev}
+            className="p-1 text-gray-500 dark:text-white/50 hover:text-gray-800 dark:hover:text-white transition-colors"
+          >
+            <ChevronLeft />
+          </button>
+          <span className="text-sm font-medium text-gray-700 dark:text-white/70 w-32 text-center capitalize">
+            {maandLabel}
+          </span>
+          <button
+            onClick={goToNext}
+            disabled={isCurrentMonth}
+            className="p-1 text-gray-500 dark:text-white/50 hover:text-gray-800 dark:hover:text-white transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+          >
+            <ChevronRight />
+          </button>
+        </div>
       </div>
 
       {/* Totaal */}
@@ -255,50 +248,23 @@ export default function UitgavesPage() {
               <form onSubmit={addVar} className="space-y-3">
                 <div>
                   <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">{t.uitgaves.omschrijving}</label>
-                  <input
-                    type="text"
-                    value={varNaam}
-                    onChange={(e) => setVarNaam(e.target.value)}
-                    placeholder={t.uitgaves.placeholder}
-                    required
-                    className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors"
-                  />
+                  <input type="text" value={varNaam} onChange={(e) => setVarNaam(e.target.value)} placeholder={t.uitgaves.placeholder} required className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors" />
                 </div>
                 <div>
                   <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">{t.uitgaves.categorie}</label>
-                  <select
-                    value={varCategorie}
-                    onChange={(e) => setVarCategorie(e.target.value)}
-                    className="w-full border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors appearance-none cursor-pointer"
-                  >
-                    {t.uitgaves.categories.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
+                  <select value={varCategorie} onChange={(e) => setVarCategorie(e.target.value)} className="w-full border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors appearance-none cursor-pointer">
+                    {t.uitgaves.categories.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">{t.uitgaves.bedragLabel}</label>
-                  <input
-                    type="number"
-                    value={varBedrag}
-                    onChange={(e) => setVarBedrag(e.target.value)}
-                    placeholder="150"
-                    min="0"
-                    step="0.01"
-                    required
-                    className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors"
-                  />
+                  <input type="number" value={varBedrag} onChange={(e) => setVarBedrag(e.target.value)} placeholder="150" min="0" step="0.01" required className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors" />
                 </div>
-                <button
-                  type="submit"
-                  disabled={varSaving}
-                  className="w-full bg-[#2d6a4f] text-white font-medium py-2.5 rounded-xl text-sm hover:bg-[#1f4d39] transition-colors disabled:opacity-50"
-                >
+                <button type="submit" disabled={varSaving} className="w-full bg-[#2d6a4f] text-white font-medium py-2.5 rounded-xl text-sm hover:bg-[#1f4d39] transition-colors disabled:opacity-50">
                   {varSaving ? t.uitgaves.opslaan : t.uitgaves.toevoegenBtn}
                 </button>
               </form>
             </div>
-
             <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
               <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">{t.uitgaves.lijst}</h3>
               {varItems.length === 0 ? (
@@ -309,37 +275,15 @@ export default function UitgavesPage() {
                     editingId === item.id ? (
                       <div key={item.id} className="py-2.5 px-3 bg-[#f0faf4] dark:bg-[#52b788]/5 rounded-xl border border-[#52b788]/20 space-y-2">
                         <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={editNaam}
-                            onChange={(e) => setEditNaam(e.target.value)}
-                            className="flex-1 min-w-0 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
-                          />
-                          <input
-                            type="number"
-                            value={editBedrag}
-                            onChange={(e) => setEditBedrag(e.target.value)}
-                            min="0"
-                            step="0.01"
-                            className="w-24 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
-                          />
+                          <input type="text" value={editNaam} onChange={(e) => setEditNaam(e.target.value)} className="flex-1 min-w-0 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors" />
+                          <input type="number" value={editBedrag} onChange={(e) => setEditBedrag(e.target.value)} min="0" step="0.01" className="w-24 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors" />
                         </div>
-                        <select
-                          value={editCategorie}
-                          onChange={(e) => setEditCategorie(e.target.value)}
-                          className="w-full border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors appearance-none cursor-pointer"
-                        >
-                          {t.uitgaves.categories.map((c) => (
-                            <option key={c} value={c}>{c}</option>
-                          ))}
+                        <select value={editCategorie} onChange={(e) => setEditCategorie(e.target.value)} className="w-full border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors appearance-none cursor-pointer">
+                          {t.uitgaves.categories.map((c) => <option key={c} value={c}>{c}</option>)}
                         </select>
                         <div className="flex gap-2 justify-end">
-                          <button onClick={cancelEdit} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                            {t.common.annuleren}
-                          </button>
-                          <button onClick={() => saveEditVar(item.id)} disabled={editSaving} className="text-xs px-3 py-1.5 rounded-lg bg-[#2d6a4f] text-white hover:bg-[#1f4d39] transition-colors disabled:opacity-50">
-                            {editSaving ? "..." : t.common.opslaan}
-                          </button>
+                          <button onClick={cancelEdit} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">{t.common.annuleren}</button>
+                          <button onClick={() => saveEditVar(item.id)} disabled={editSaving} className="text-xs px-3 py-1.5 rounded-lg bg-[#2d6a4f] text-white hover:bg-[#1f4d39] transition-colors disabled:opacity-50">{editSaving ? "..." : t.common.opslaan}</button>
                         </div>
                       </div>
                     ) : (
@@ -349,15 +293,9 @@ export default function UitgavesPage() {
                           <span className="text-xs text-gray-400 dark:text-white/30 block">{item.categorie}</span>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                            € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
-                          </span>
-                          <button onClick={() => startEdit(item)} className="text-gray-400 dark:text-white/40 hover:text-[#2d6a4f] dark:hover:text-[#52b788] transition-colors" aria-label={t.common.bewerken}>
-                            <EditIcon />
-                          </button>
-                          <button onClick={() => removeVar(item.id)} className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors" aria-label={t.common.verwijder}>
-                            <TrashIcon />
-                          </button>
+                          <span className="text-sm font-semibold text-gray-900 dark:text-white">€ {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}</span>
+                          <button onClick={() => startEdit(item)} className="text-gray-400 dark:text-white/40 hover:text-[#2d6a4f] dark:hover:text-[#52b788] transition-colors" aria-label={t.common.bewerken}><EditIcon /></button>
+                          <button onClick={() => removeVar(item.id)} className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors" aria-label={t.common.verwijder}><TrashIcon /></button>
                         </div>
                       </div>
                     )
@@ -373,50 +311,23 @@ export default function UitgavesPage() {
               <form onSubmit={addVast} className="space-y-3">
                 <div>
                   <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">{t.vasteLasten.omschrijving}</label>
-                  <input
-                    type="text"
-                    value={vastNaam}
-                    onChange={(e) => setVastNaam(e.target.value)}
-                    placeholder={t.vasteLasten.placeholder}
-                    required
-                    className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors"
-                  />
+                  <input type="text" value={vastNaam} onChange={(e) => setVastNaam(e.target.value)} placeholder={t.vasteLasten.placeholder} required className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors" />
                 </div>
                 <div>
                   <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">{t.vasteLasten.categorie}</label>
-                  <select
-                    value={vastCategorie}
-                    onChange={(e) => setVastCategorie(e.target.value)}
-                    className="w-full border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors appearance-none cursor-pointer"
-                  >
-                    {t.vasteLasten.categories.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
+                  <select value={vastCategorie} onChange={(e) => setVastCategorie(e.target.value)} className="w-full border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors appearance-none cursor-pointer">
+                    {t.vasteLasten.categories.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">{t.vasteLasten.bedragLabel}</label>
-                  <input
-                    type="number"
-                    value={vastBedrag}
-                    onChange={(e) => setVastBedrag(e.target.value)}
-                    placeholder="900"
-                    min="0"
-                    step="0.01"
-                    required
-                    className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors"
-                  />
+                  <input type="number" value={vastBedrag} onChange={(e) => setVastBedrag(e.target.value)} placeholder="900" min="0" step="0.01" required className="w-full border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-white placeholder-gray-300 dark:placeholder-white/20 focus:outline-none focus:border-[#52b788] transition-colors" />
                 </div>
-                <button
-                  type="submit"
-                  disabled={vastSaving}
-                  className="w-full bg-[#2d6a4f] text-white font-medium py-2.5 rounded-xl text-sm hover:bg-[#1f4d39] transition-colors disabled:opacity-50"
-                >
+                <button type="submit" disabled={vastSaving} className="w-full bg-[#2d6a4f] text-white font-medium py-2.5 rounded-xl text-sm hover:bg-[#1f4d39] transition-colors disabled:opacity-50">
                   {vastSaving ? t.vasteLasten.opslaan : t.vasteLasten.toevoegenBtn}
                 </button>
               </form>
             </div>
-
             <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
               <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">{t.vasteLasten.lijst}</h3>
               {vastItems.length === 0 ? (
@@ -427,37 +338,15 @@ export default function UitgavesPage() {
                     editingId === item.id ? (
                       <div key={item.id} className="py-2.5 px-3 bg-[#f0faf4] dark:bg-[#52b788]/5 rounded-xl border border-[#52b788]/20 space-y-2">
                         <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={editNaam}
-                            onChange={(e) => setEditNaam(e.target.value)}
-                            className="flex-1 min-w-0 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
-                          />
-                          <input
-                            type="number"
-                            value={editBedrag}
-                            onChange={(e) => setEditBedrag(e.target.value)}
-                            min="0"
-                            step="0.01"
-                            className="w-24 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors"
-                          />
+                          <input type="text" value={editNaam} onChange={(e) => setEditNaam(e.target.value)} className="flex-1 min-w-0 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors" />
+                          <input type="number" value={editBedrag} onChange={(e) => setEditBedrag(e.target.value)} min="0" step="0.01" className="w-24 border border-gray-200 dark:border-white/10 dark:bg-white/5 rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors" />
                         </div>
-                        <select
-                          value={editCategorie}
-                          onChange={(e) => setEditCategorie(e.target.value)}
-                          className="w-full border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors appearance-none cursor-pointer"
-                        >
-                          {t.vasteLasten.categories.map((c) => (
-                            <option key={c} value={c}>{c}</option>
-                          ))}
+                        <select value={editCategorie} onChange={(e) => setEditCategorie(e.target.value)} className="w-full border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] rounded-lg px-2.5 py-1.5 text-sm text-gray-800 dark:text-white focus:outline-none focus:border-[#52b788] transition-colors appearance-none cursor-pointer">
+                          {t.vasteLasten.categories.map((c) => <option key={c} value={c}>{c}</option>)}
                         </select>
                         <div className="flex gap-2 justify-end">
-                          <button onClick={cancelEdit} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                            {t.common.annuleren}
-                          </button>
-                          <button onClick={() => saveEditVast(item.id)} disabled={editSaving} className="text-xs px-3 py-1.5 rounded-lg bg-[#2d6a4f] text-white hover:bg-[#1f4d39] transition-colors disabled:opacity-50">
-                            {editSaving ? "..." : t.common.opslaan}
-                          </button>
+                          <button onClick={cancelEdit} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">{t.common.annuleren}</button>
+                          <button onClick={() => saveEditVast(item.id)} disabled={editSaving} className="text-xs px-3 py-1.5 rounded-lg bg-[#2d6a4f] text-white hover:bg-[#1f4d39] transition-colors disabled:opacity-50">{editSaving ? "..." : t.common.opslaan}</button>
                         </div>
                       </div>
                     ) : (
@@ -467,15 +356,9 @@ export default function UitgavesPage() {
                           <span className="text-xs text-gray-400 dark:text-white/30 block">{item.categorie}</span>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                            € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
-                          </span>
-                          <button onClick={() => startEdit(item)} className="text-gray-400 dark:text-white/40 hover:text-[#2d6a4f] dark:hover:text-[#52b788] transition-colors" aria-label={t.common.bewerken}>
-                            <EditIcon />
-                          </button>
-                          <button onClick={() => removeVast(item.id)} className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors" aria-label={t.common.verwijder}>
-                            <TrashIcon />
-                          </button>
+                          <span className="text-sm font-semibold text-gray-900 dark:text-white">€ {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}</span>
+                          <button onClick={() => startEdit(item)} className="text-gray-400 dark:text-white/40 hover:text-[#2d6a4f] dark:hover:text-[#52b788] transition-colors" aria-label={t.common.bewerken}><EditIcon /></button>
+                          <button onClick={() => removeVast(item.id)} className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors" aria-label={t.common.verwijder}><TrashIcon /></button>
                         </div>
                       </div>
                     )

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useTheme } from "@/app/components/ThemeProvider";
 import { useLanguage } from "@/lib/i18n";
+import { useMonth } from "@/lib/month-context";
 
 export default function DashboardHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
   const pathname = usePathname();
@@ -15,7 +16,13 @@ export default function DashboardHeader({ onMenuToggle }: { onMenuToggle?: () =>
   const supabase = createClient();
   const { dark, toggle } = useTheme();
   const { t, lang, setLang } = useLanguage();
+  const { activeYear, activeMonthIdx, isCurrentMonth, goToPrev, goToNext } = useMonth();
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const maandLabel = new Intl.DateTimeFormat(lang === "nl" ? "nl-NL" : "en-US", {
+    month: "short",
+    year: "numeric",
+  }).format(new Date(activeYear, activeMonthIdx));
 
   const LABELS: Record<string, string> = {
     "/dashboard": t.nav.home,
@@ -59,6 +66,24 @@ export default function DashboardHeader({ onMenuToggle }: { onMenuToggle?: () =>
           <HamburgerIcon />
         </button>
         <span className="text-sm text-gray-600 dark:text-white/60">{LABELS[pathname] ?? "Dashboard"}</span>
+        <div className="hidden sm:flex items-center gap-1 ml-2 pl-2 border-l border-gray-100 dark:border-white/10">
+          <button
+            onClick={goToPrev}
+            className="p-0.5 text-gray-400 dark:text-white/40 hover:text-gray-600 dark:hover:text-white/60 transition-colors"
+          >
+            <ChevronSmallLeft />
+          </button>
+          <span className="text-xs font-medium text-gray-500 dark:text-white/50 w-[72px] text-center capitalize">
+            {maandLabel}
+          </span>
+          <button
+            onClick={goToNext}
+            disabled={isCurrentMonth}
+            className="p-0.5 text-gray-400 dark:text-white/40 hover:text-gray-600 dark:hover:text-white/60 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <ChevronSmallRight />
+          </button>
+        </div>
       </div>
       <div className="flex items-center gap-3">
         <button
@@ -184,6 +209,22 @@ function SignOutIcon() {
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
       <polyline points="16,17 21,12 16,7" />
       <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  );
+}
+
+function ChevronSmallLeft() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="15,18 9,12 15,6" />
+    </svg>
+  );
+}
+
+function ChevronSmallRight() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9,18 15,12 9,6" />
     </svg>
   );
 }

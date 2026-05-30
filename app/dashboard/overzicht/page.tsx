@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/i18n";
+import { useMonth } from "@/lib/month-context";
 
 type Item = { id: string; naam: string; bedrag: number };
 
@@ -15,6 +16,8 @@ export default function OverzichtPage() {
   const supabase = createClient();
   const router = useRouter();
   const { t } = useLanguage();
+  const { activeMaandStr } = useMonth();
+
   const [inkomsten, setInkomsten] = useState<Item[]>([]);
   const [vasteLasten, setVasteLasten] = useState<Item[]>([]);
   const [uitgaves, setUitgaves] = useState<Item[]>([]);
@@ -25,17 +28,18 @@ export default function OverzichtPage() {
       if (!user) { router.push("/login"); return; }
     });
 
+    setLoading(true);
     Promise.all([
-      supabase.from("inkomsten").select("id, naam, bedrag").order("bedrag", { ascending: false }),
-      supabase.from("vaste_lasten").select("id, naam, bedrag").order("bedrag", { ascending: false }),
-      supabase.from("uitgaves").select("id, naam, bedrag").order("bedrag", { ascending: false }),
+      supabase.from("inkomsten").select("id, naam, bedrag").eq("maand", activeMaandStr).order("bedrag", { ascending: false }),
+      supabase.from("vaste_lasten").select("id, naam, bedrag").eq("maand", activeMaandStr).order("bedrag", { ascending: false }),
+      supabase.from("uitgaves").select("id, naam, bedrag").eq("maand", activeMaandStr).order("bedrag", { ascending: false }),
     ]).then(([ink, vl, uit]) => {
       if (ink.data) setInkomsten(ink.data);
       if (vl.data) setVasteLasten(vl.data);
       if (uit.data) setUitgaves(uit.data);
       setLoading(false);
     });
-  }, [supabase, router]);
+  }, [supabase, router, activeMaandStr]);
 
   const totaalInkomsten = inkomsten.reduce((s, i) => s + i.bedrag, 0);
   const totaalVasteLasten = vasteLasten.reduce((s, i) => s + i.bedrag, 0);

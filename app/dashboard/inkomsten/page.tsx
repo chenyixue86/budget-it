@@ -4,13 +4,18 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/i18n";
+import { useMonth, getPrevMaandStr, getCurrentMaandStr } from "@/lib/month-context";
 
 type Inkomen = { id: string; naam: string; bedrag: number };
+
+const NOW_MAAND = getCurrentMaandStr();
 
 export default function InkomstenPage() {
   const supabase = createClient();
   const router = useRouter();
   const { t } = useLanguage();
+  const { activeMaandStr } = useMonth();
+
   const [items, setItems] = useState<Inkomen[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [naam, setNaam] = useState("");
@@ -22,20 +27,41 @@ export default function InkomstenPage() {
   const [editBedrag, setEditBedrag] = useState("");
   const [editSaving, setEditSaving] = useState(false);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (uid: string | null) => {
     const { data } = await supabase
       .from("inkomsten")
       .select("id, naam, bedrag")
+      .eq("maand", activeMaandStr)
       .order("created_at");
+
+    if (data && data.length === 0 && activeMaandStr > NOW_MAAND && uid) {
+      const prevMaand = getPrevMaandStr(activeMaandStr);
+      const { data: prev } = await supabase
+        .from("inkomsten")
+        .select("naam, bedrag")
+        .eq("maand", prevMaand);
+      if (prev && prev.length > 0) {
+        await supabase.from("inkomsten").insert(
+          prev.map((item) => ({ ...item, user_id: uid, maand: activeMaandStr }))
+        );
+        const { data: fresh } = await supabase
+          .from("inkomsten")
+          .select("id, naam, bedrag")
+          .eq("maand", activeMaandStr)
+          .order("created_at");
+        if (fresh) setItems(fresh);
+        return;
+      }
+    }
     if (data) setItems(data);
-  }, [supabase]);
+  }, [supabase, activeMaandStr]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) { router.push("/login"); return; }
       setUserId(user.id);
+      load(user.id);
     });
-    load();
   }, [load, supabase, router]);
 
   async function add(e: React.FormEvent) {
@@ -46,11 +72,12 @@ export default function InkomstenPage() {
       user_id: userId,
       naam: naam.trim(),
       bedrag: parseFloat(bedrag),
+      maand: activeMaandStr,
     });
     setNaam("");
     setBedrag("");
     setSaving(false);
-    load();
+    load(userId);
   }
 
   async function remove(id: string) {
@@ -77,7 +104,7 @@ export default function InkomstenPage() {
     }).eq("id", id);
     setEditSaving(false);
     setEditingId(null);
-    load();
+    load(userId);
   }
 
   const totaal = items.reduce((s, i) => s + i.bedrag, 0);
@@ -160,17 +187,10 @@ export default function InkomstenPage() {
                       />
                     </div>
                     <div className="flex gap-2 justify-end">
-                      <button
-                        onClick={cancelEdit}
-                        className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-                      >
+                      <button onClick={cancelEdit} className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                         {t.common.annuleren}
                       </button>
-                      <button
-                        onClick={() => saveEdit(item.id)}
-                        disabled={editSaving}
-                        className="text-xs px-3 py-1.5 rounded-lg bg-[#2d6a4f] text-white hover:bg-[#1f4d39] transition-colors disabled:opacity-50"
-                      >
+                      <button onClick={() => saveEdit(item.id)} disabled={editSaving} className="text-xs px-3 py-1.5 rounded-lg bg-[#2d6a4f] text-white hover:bg-[#1f4d39] transition-colors disabled:opacity-50">
                         {editSaving ? "..." : t.common.opslaan}
                       </button>
                     </div>
@@ -182,18 +202,10 @@ export default function InkomstenPage() {
                       <span className="text-sm font-semibold text-gray-900 dark:text-white">
                         € {item.bedrag.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
                       </span>
-                      <button
-                        onClick={() => startEdit(item)}
-                        className="text-gray-400 dark:text-white/40 hover:text-[#2d6a4f] dark:hover:text-[#52b788] transition-colors"
-                        aria-label={t.common.bewerken}
-                      >
+                      <button onClick={() => startEdit(item)} className="text-gray-400 dark:text-white/40 hover:text-[#2d6a4f] dark:hover:text-[#52b788] transition-colors" aria-label={t.common.bewerken}>
                         <EditIcon />
                       </button>
-                      <button
-                        onClick={() => remove(item.id)}
-                        className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors"
-                        aria-label={t.common.verwijder}
-                      >
+                      <button onClick={() => remove(item.id)} className="text-gray-400 dark:text-white/40 hover:text-red-400 transition-colors" aria-label={t.common.verwijder}>
                         <TrashIcon />
                       </button>
                     </div>

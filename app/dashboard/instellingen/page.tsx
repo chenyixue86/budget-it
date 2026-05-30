@@ -3,11 +3,18 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/i18n";
+import { useMonth } from "@/lib/month-context";
 
 export default function InstellingenPage() {
   const supabase = createClient();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { activeMaandStr, activeYear, activeMonthIdx } = useMonth();
   const i = t.instellingen;
+
+  const activeMaandLabel = new Intl.DateTimeFormat(lang === "nl" ? "nl-NL" : "en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(activeYear, activeMonthIdx));
 
   const [currentEmail, setCurrentEmail] = useState("");
   const [newEmail, setNewEmail] = useState("");
@@ -27,11 +34,19 @@ export default function InstellingenPage() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setCurrentEmail(user?.email ?? "");
     });
-
-    supabase.from("user_settings").select("spaardoel").single().then(({ data }) => {
-      if (data?.spaardoel) setSpaardoel(String(data.spaardoel));
-    });
   }, [supabase]);
+
+  useEffect(() => {
+    supabase.from("spaardoel_history")
+      .select("bedrag")
+      .lte("maand", activeMaandStr)
+      .order("maand", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => {
+        setSpaardoel(data?.bedrag ? String(data.bedrag) : "");
+      });
+  }, [supabase, activeMaandStr]);
 
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
@@ -81,9 +96,9 @@ export default function InstellingenPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { error } = await supabase.from("user_settings").upsert(
-      { user_id: user.id, spaardoel: bedrag },
-      { onConflict: "user_id" }
+    const { error } = await supabase.from("spaardoel_history").upsert(
+      { user_id: user.id, maand: activeMaandStr, bedrag },
+      { onConflict: "user_id,maand" }
     );
 
     if (error) {
@@ -114,8 +129,13 @@ export default function InstellingenPage() {
         </div>
 
         <div className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200">
-          <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-4">{i.spaardoelTitle}</h3>
-          <p className="text-xs text-gray-500 dark:text-white/40 mb-4">{i.spaardoelSub}</p>
+          <h3 className="font-semibold text-gray-800 dark:text-white/80 text-sm mb-2">{i.spaardoelTitle}</h3>
+          <p className="text-xs text-gray-500 dark:text-white/40 mb-4">
+            {i.spaardoelSub}
+            {" "}
+            <span className="capitalize font-medium text-gray-600 dark:text-white/50">{activeMaandLabel}</span>
+            {lang === "nl" ? " en later." : " onwards."}
+          </p>
           <form onSubmit={handleSpaardoel} className="space-y-3">
             <div>
               <label className="block text-sm text-gray-700 dark:text-white/70 mb-1.5">{i.spaardoelLabel}</label>
