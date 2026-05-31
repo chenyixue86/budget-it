@@ -133,6 +133,19 @@ const translations = {
       bugSub: "Dit is een persoonlijk project. Zie je iets niet kloppen of heb je een suggestie? Laat het weten.",
       footerTagline: "Gemaakt voor iedereen die grip wil op hun geld.",
     },
+    features: {
+      label: "Wat je krijgt",
+      title: "Alles inbegrepen.",
+      subtitle: "Geen abonnement, geen advertenties. Gewoon budgetbeheer dat werkt.",
+      items: [
+        { title: "Maandelijkse omgeving", desc: "Elke maand is een eigen snapshot. Navigeer vrij tussen maanden zonder data te overschrijven." },
+        { title: "6-maands samenvatting", desc: "Vergelijk inkomsten en uitgaves over de afgelopen 6 maanden met een visuele bar chart." },
+        { title: "Spaardoel bijhouden", desc: "Stel een maanddoel in en zie direct op het dashboard of je op schema ligt." },
+        { title: "CSV export", desc: "Download je maandoverzicht als CSV-bestand, klaar voor Excel of Google Sheets." },
+        { title: "Dark mode", desc: "Automatisch op basis van je systeemvoorkeur, of handmatig te wisselen in de header." },
+        { title: "Nederlands & Engels", desc: "Volledig in NL en EN. Automatisch op basis van je browsertaal, eenvoudig te wisselen." },
+      ],
+    },
     comparison: {
       label: "Vergelijking",
       title: "Ga lean en bespaar",
@@ -393,6 +406,19 @@ const translations = {
       bugTitle: "Found a bug?",
       bugSub: "This is a personal project. See something wrong or have a suggestion? Let us know.",
       footerTagline: "Made for everyone who wants control over their money.",
+    },
+    features: {
+      label: "What you get",
+      title: "Everything included.",
+      subtitle: "No subscription, no ads. Just budget management that works.",
+      items: [
+        { title: "Monthly environment", desc: "Each month is its own snapshot. Navigate freely between months without overwriting data." },
+        { title: "6-month summary", desc: "Compare income and expenses over the past 6 months with a visual bar chart." },
+        { title: "Savings goal tracking", desc: "Set a monthly goal and see directly on your dashboard if you're on track." },
+        { title: "CSV export", desc: "Download your monthly overview as a CSV file, ready for Excel or Google Sheets." },
+        { title: "Dark mode", desc: "Automatically based on your system preference, or toggle manually in the header." },
+        { title: "Dutch & English", desc: "Fully available in NL and EN. Automatic based on browser language, easy to switch." },
+      ],
     },
     comparison: {
       label: "Comparison",

@@ -4,6 +4,7 @@ import LandingNavbar from "./components/LandingNavbar";
 import BugReportForm from "./components/BugReportForm";
 import ComparisonSection from "./components/ComparisonSection";
 import DashboardMockup from "./components/DashboardMockup";
+import FeaturesSection from "./components/FeaturesSection";
 import { useLanguage } from "@/lib/i18n";
 
 export default function Home() {
@@ -12,6 +13,7 @@ export default function Home() {
     <main className="flex flex-col min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white transition-colors duration-200">
       <LandingNavbar />
       <Hero />
+      <FeaturesSection />
       <HowItWorks />
       <ComparisonSection />
       <BugReport />
