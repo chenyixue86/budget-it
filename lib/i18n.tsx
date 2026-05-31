@@ -217,7 +217,11 @@ const translations = {
       binnenkort: "Binnenkort",
       binnenkortBadge: "BINNENKORT",
       typeLabels: { new: "Nieuw", fix: "Fix", improvement: "Verbeterd" },
-      upcoming: [],
+      upcoming: [
+        { title: "Financiële doelen", description: "Spaar voor een vakantie, laptop of auto met eigen voortgangsbalk en einddatum." },
+        { title: "Budgetlimieten", description: "Stel een max in per categorie en krijg een waarschuwing als je er over gaat." },
+        { title: "Email reminders", description: "Wekelijkse herinnering om je uitgaves bij te houden." },
+      ],
       releases: [
         {
           version: "v0.1.3",
@@ -489,7 +493,11 @@ const translations = {
       binnenkort: "Coming soon",
       binnenkortBadge: "COMING SOON",
       typeLabels: { new: "New", fix: "Fix", improvement: "Improved" },
-      upcoming: [],
+      upcoming: [
+        { title: "Financial goals", description: "Save for a vacation, laptop or car with your own progress bar and end date." },
+        { title: "Budget limits", description: "Set a max per category and get a warning when you exceed it." },
+        { title: "Email reminders", description: "Weekly reminder to keep your expenses up to date." },
+      ],
       releases: [
         {
           version: "v0.1.3",
