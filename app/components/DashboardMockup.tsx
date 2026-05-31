@@ -67,15 +67,15 @@ export default function DashboardMockup() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded-full bg-[#52b788] flex items-center justify-center text-white text-[9px] font-bold">K</div>
-                <span className="text-xs text-gray-600 font-medium">Kevin</span>
+                <div className="w-5 h-5 rounded-full bg-[#52b788] flex items-center justify-center text-white text-[9px] font-bold">A</div>
+                <span className="text-xs text-gray-600 font-medium">Alex</span>
               </div>
             </div>
 
             <div className="flex-1 p-4 overflow-hidden">
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h2 className="text-base font-bold text-gray-900">Hallo, Kevin 👋</h2>
+                  <h2 className="text-base font-bold text-gray-900">Hallo, Alex 👋</h2>
                   <p className="text-xs text-gray-400">Welkom bij je budget overzicht.</p>
                 </div>
                 <div className="flex gap-0.5 bg-white border border-gray-200 rounded-lg p-0.5">
