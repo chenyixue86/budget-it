@@ -105,6 +105,13 @@ const translations = {
       watJeOverhoudt: "Wat je overhoudt",
       vanInkomenBesteed: "% van inkomen besteed",
       over: "% over",
+      exportBtn: "Exporteer CSV",
+      csvNaam: "Naam",
+      csvBedrag: "Bedrag",
+      csvTotaal: "Totaal",
+      csvTotaalInkomsten: "Totaal inkomsten",
+      csvTotaalUitgegeven: "Totaal uitgegeven",
+      csvOver: "Over",
     },
     // Landing page
     landing: {
@@ -199,6 +206,17 @@ const translations = {
       typeLabels: { new: "Nieuw", fix: "Fix", improvement: "Verbeterd" },
       upcoming: [],
       releases: [
+        {
+          version: "v0.1.3",
+          date: "31 Mei 2026",
+          label: "",
+          changes: [
+            { type: "new", text: "Maandelijkse omgeving — elke maand heeft eigen data, navigeer via < > in de header" },
+            { type: "new", text: "Samenvatting pagina — vergelijk je inkomsten en uitgaves over de afgelopen 6 maanden" },
+            { type: "improvement", text: "Uitgaves en Vaste Lasten samengevoegd op één pagina met tabs (Variabel / Vast)" },
+            { type: "improvement", text: "Items inline bewerken — klik op het potlood om direct aan te passen" },
+          ],
+        },
         {
           version: "v0.1.2",
           date: "26 Mei 2026",
@@ -348,6 +366,13 @@ const translations = {
       watJeOverhoudt: "What you keep",
       vanInkomenBesteed: "% of income spent",
       over: "% left",
+      exportBtn: "Export CSV",
+      csvNaam: "Name",
+      csvBedrag: "Amount",
+      csvTotaal: "Total",
+      csvTotaalInkomsten: "Total income",
+      csvTotaalUitgegeven: "Total spent",
+      csvOver: "Left",
     },
     // Landing page
     landing: {
@@ -440,6 +465,17 @@ const translations = {
       typeLabels: { new: "New", fix: "Fix", improvement: "Improved" },
       upcoming: [],
       releases: [
+        {
+          version: "v0.1.3",
+          date: "31 May 2026",
+          label: "",
+          changes: [
+            { type: "new", text: "Monthly environment — each month has its own data, navigate with < > in the header" },
+            { type: "new", text: "Summary page — compare your income and expenses over the past 6 months" },
+            { type: "improvement", text: "Expenses and Fixed Costs merged into one page with tabs (Variable / Fixed)" },
+            { type: "improvement", text: "Inline editing — click the pencil icon to edit items directly" },
+          ],
+        },
         {
           version: "v0.1.2",
           date: "26 May 2026",

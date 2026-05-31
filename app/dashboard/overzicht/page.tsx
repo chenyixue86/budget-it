@@ -12,10 +12,20 @@ function fmt(n: number) {
   return n.toLocaleString("nl-NL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+function DownloadIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  );
+}
+
 export default function OverzichtPage() {
   const supabase = createClient();
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { activeMaandStr } = useMonth();
 
   const [inkomsten, setInkomsten] = useState<Item[]>([]);
@@ -48,6 +58,51 @@ export default function OverzichtPage() {
   const uitgegeven = totaalVasteLasten + totaalUitgaves;
   const uitPct = totaalInkomsten > 0 ? Math.min((uitgegeven / totaalInkomsten) * 100, 100) : 0;
 
+  function exportCSV() {
+    const o = t.overzicht;
+    const esc = (v: string | number) => {
+      const s = String(v);
+      return s.includes(",") || s.includes('"') ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const [y, m] = activeMaandStr.split("-").map(Number);
+    const maandLabel = new Intl.DateTimeFormat(lang === "nl" ? "nl-NL" : "en-US", {
+      month: "long", year: "numeric",
+    }).format(new Date(y, m - 1));
+
+    const lines = [
+      `budget-it - ${maandLabel}`,
+      "",
+      o.inkomsten,
+      `${o.csvNaam},${o.csvBedrag}`,
+      ...inkomsten.map((i) => `${esc(i.naam)},${i.bedrag.toFixed(2)}`),
+      `${o.csvTotaal},${totaalInkomsten.toFixed(2)}`,
+      "",
+      o.vasteLasten,
+      `${o.csvNaam},${o.csvBedrag}`,
+      ...vasteLasten.map((i) => `${esc(i.naam)},${i.bedrag.toFixed(2)}`),
+      `${o.csvTotaal},${totaalVasteLasten.toFixed(2)}`,
+      "",
+      o.uitgaves,
+      `${o.csvNaam},${o.csvBedrag}`,
+      ...uitgaves.map((i) => `${esc(i.naam)},${i.bedrag.toFixed(2)}`),
+      `${o.csvTotaal},${totaalUitgaves.toFixed(2)}`,
+      "",
+      `${o.csvTotaalInkomsten},${totaalInkomsten.toFixed(2)}`,
+      `${o.csvTotaalUitgegeven},${uitgegeven.toFixed(2)}`,
+      `${o.csvOver},${over.toFixed(2)}`,
+    ];
+
+    const blob = new Blob(["﻿" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `budget-${activeMaandStr}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -58,9 +113,18 @@ export default function OverzichtPage() {
 
   return (
     <>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t.overzicht.title}</h1>
-        <p className="text-gray-400 dark:text-white/40 mt-1 text-sm">{t.overzicht.subtitle}</p>
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t.overzicht.title}</h1>
+          <p className="text-gray-400 dark:text-white/40 mt-1 text-sm">{t.overzicht.subtitle}</p>
+        </div>
+        <button
+          onClick={exportCSV}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 dark:border-white/10 text-xs font-medium text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white/90 transition-colors shrink-0 mt-1"
+        >
+          <DownloadIcon />
+          {t.overzicht.exportBtn}
+        </button>
       </div>
 
       <div className="max-w-2xl space-y-3">
