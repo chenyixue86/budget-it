@@ -14,7 +14,6 @@ export default function Home() {
       <LandingNavbar />
       <Hero />
       <FeaturesSection />
-      <HowItWorks />
       <ComparisonSection />
       <BugReport />
       <Footer />
@@ -64,34 +63,6 @@ function Hero() {
   );
 }
 
-function HowItWorks() {
-  const { t } = useLanguage();
-
-  return (
-    <section id="how-it-works" className="py-24 px-6 border-t border-gray-100 dark:border-white/5">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-14">
-          <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">{t.landing.howItWorksLabel}</p>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-            {t.landing.howItWorksTitle}
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {t.landing.steps.map((step) => (
-            <div key={step.num} className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-2xl bg-green-500/10 dark:bg-green-400/10 border border-green-500/20 dark:border-green-400/20 flex items-center justify-center text-green-600 dark:text-green-400 font-bold text-lg mb-6">
-                {step.num}
-              </div>
-              <h3 className="font-semibold text-xl mb-3 text-gray-900 dark:text-white">{step.title}</h3>
-              <p className="text-gray-600 dark:text-white/60 text-sm leading-relaxed max-w-xs">{step.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function BugReport() {
   const { t } = useLanguage();
