@@ -34,11 +34,11 @@ export default function FeaturesSection() {
   const f = t.features;
 
   return (
-    <section className="py-24 px-6 border-t border-gray-100 dark:border-white/5">
+    <section className="py-24 px-6 bg-[#fafafa] dark:bg-[#0d0d0d] border-t border-gray-100 dark:border-white/5">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">{f.label}</p>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-gray-900 dark:text-white mb-4">
+          <p className="text-sm font-semibold mb-3 dark:text-green-400" style={{ color: "#00ae3b" }}>{f.label}</p>
+          <h2 className="landing-heading text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-4">
             {f.title}
           </h2>
           <p className="text-gray-600 dark:text-white/60 text-base max-w-md mx-auto">

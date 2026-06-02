@@ -45,10 +45,16 @@ body {
 
 /* Staggered hero animations */
 .hero-badge    { animation: fadeUp 0.6s ease both; animation-delay: 0.05s; }
-.hero-h1       { animation: fadeUp 0.6s ease both; animation-delay: 0.15s; }
+.hero-h1       { animation: fadeUp 0.6s ease both; animation-delay: 0.15s; font-family: var(--font-inter), Arial, sans-serif; letter-spacing: -0.03em; }
 .hero-sub      { animation: fadeUp 0.6s ease both; animation-delay: 0.25s; }
 .hero-cta      { animation: fadeUp 0.6s ease both; animation-delay: 0.35s; }
 .hero-mockup   { animation: fadeUp 0.8s ease both; animation-delay: 0.5s; }
+
+/* Landing section headings — Inter with tight tracking like Ecomflow */
+.landing-heading {
+  font-family: var(--font-inter), Arial, sans-serif;
+  letter-spacing: -0.03em;
+}
 
 /* Floating mockup */
 .mockup-float {
@@ -71,39 +77,44 @@ body {
 }
 
 .btn-primary {
-  background: #15803d;
-  transition: background 0.15s ease, transform 0.15s ease;
+  background: linear-gradient(180deg, #00ae3b 0%, #006b22 100%);
+  box-shadow: 0px 1px 11px 0px rgba(0, 0, 0, 0.15);
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 .btn-primary:hover {
-  background: #166534;
+  opacity: 0.88;
   transform: translateY(-1px);
 }
 
 .btn-primary:active {
-  background: #14532d;
+  opacity: 1;
   transform: translateY(0px);
 }
 
 .btn-secondary {
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(34, 34, 34, 0.12);
   background: transparent;
-  transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  box-shadow: 0px 1px 11px 0px rgba(0, 0, 0, 0.06);
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
 
 .dark .btn-secondary {
   border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
 }
 
 .btn-secondary:hover {
-  border-color: #d1d5db;
-  background: #f9fafb;
+  border-color: rgba(34, 34, 34, 0.22);
+  background: #f9f9f9;
+  box-shadow: 0px 1px 15px 0px rgba(0, 0, 0, 0.09);
   transform: translateY(-1px);
 }
 
 .dark .btn-secondary:hover {
   border-color: rgba(255, 255, 255, 0.22);
   background: rgba(255, 255, 255, 0.04);
+  box-shadow: none;
 }
 
 .btn-secondary:active {

@@ -18,8 +18,8 @@ export default function ComparisonSection() {
 
           {/* Left */}
           <div>
-            <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">{t.comparison.label}</p>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight text-gray-900 dark:text-white mb-5">
+            <p className="text-sm font-semibold mb-3 dark:text-green-400" style={{ color: "#00ae3b" }}>{t.comparison.label}</p>
+            <h2 className="landing-heading text-3xl md:text-5xl font-black leading-tight text-gray-900 dark:text-white mb-5">
               {t.comparison.title}<br />
               <span className="text-green-500 dark:text-green-400">{t.comparison.titleAccent}</span>
             </h2>
@@ -30,14 +30,14 @@ export default function ComparisonSection() {
             <div className="flex flex-col sm:flex-row gap-6">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-green-600 dark:text-green-400"><CheckIcon /></span>
+                  <span className="dark:text-green-400" style={{ color: "#00ae3b" }}><CheckIcon /></span>
                   <span className="font-semibold text-gray-900 dark:text-white text-sm">{t.comparison.free}</span>
                 </div>
                 <p className="text-gray-600 dark:text-white/60 text-sm pl-6">{t.comparison.freeSub}</p>
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-green-600 dark:text-green-400"><CheckIcon /></span>
+                  <span className="dark:text-green-400" style={{ color: "#00ae3b" }}><CheckIcon /></span>
                   <span className="font-semibold text-gray-900 dark:text-white text-sm">{t.comparison.noCard}</span>
                 </div>
                 <p className="text-gray-600 dark:text-white/60 text-sm pl-6">{t.comparison.noCardSub}</p>
@@ -86,7 +86,7 @@ export default function ComparisonSection() {
                 {t.comparison.features.map((f, i) => (
                   <div key={f.label} className="grid grid-cols-2 px-5 py-3.5 hover:bg-gray-50/60 dark:hover:bg-white/3 transition-colors">
                     <span className="text-sm text-gray-700 dark:text-white/70">{f.label}</span>
-                    <span className={`text-sm font-medium ${isBudgetit ? "text-green-600 dark:text-green-400" : "text-gray-700 dark:text-white/70"}`}>
+                    <span className={`text-sm font-medium ${isBudgetit ? "dark:text-green-400" : "text-gray-700 dark:text-white/70"}`} style={isBudgetit ? { color: "#00ae3b" } : {}}>
                       {isBudgetit ? t.comparison.gratis : `€ ${PRICES_ANDERE[i].toFixed(2)} / ${t.comparison.perMonth}`}
                     </span>
                   </div>
@@ -96,7 +96,7 @@ export default function ComparisonSection() {
               {/* Total */}
               <div className="grid grid-cols-2 px-5 py-4 border-t border-gray-100 dark:border-white/8 bg-gray-50 dark:bg-white/3">
                 <span className="text-sm font-bold text-gray-800 dark:text-white/80">{t.comparison.total}</span>
-                <span className={`text-xl font-bold ${isBudgetit ? "text-green-600 dark:text-green-400" : "text-red-500"}`}>
+                <span className={`text-xl font-bold ${isBudgetit ? "dark:text-green-400" : "text-red-500"}`} style={isBudgetit ? { color: "#00ae3b" } : {}}>
                   {isBudgetit ? `€ 0 / ${t.comparison.perMonth}` : `${TOTAAL_ANDERE_BEDRAG} / ${t.comparison.perMonth}`}
                 </span>
               </div>

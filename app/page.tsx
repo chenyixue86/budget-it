@@ -29,7 +29,7 @@ function Hero() {
       <div
         className="absolute left-0 top-0 h-full w-72 pointer-events-none hidden md:block opacity-70 dark:opacity-15"
         style={{
-          backgroundImage: "radial-gradient(circle, #86efac 1.5px, transparent 1.5px)",
+          backgroundImage: "radial-gradient(circle, #00ae3b 1.5px, transparent 1.5px)",
           backgroundSize: "22px 22px",
           maskImage: "linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 100%)",
           WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 100%)",
@@ -38,21 +38,23 @@ function Hero() {
       <div
         className="absolute right-0 top-0 h-full w-72 pointer-events-none hidden md:block opacity-70 dark:opacity-15"
         style={{
-          backgroundImage: "radial-gradient(circle, #86efac 1.5px, transparent 1.5px)",
+          backgroundImage: "radial-gradient(circle, #00ae3b 1.5px, transparent 1.5px)",
           backgroundSize: "22px 22px",
           maskImage: "linear-gradient(to left, rgba(0,0,0,0.5) 0%, transparent 100%)",
           WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,0.5) 0%, transparent 100%)",
         }}
       />
 
-      <div className="hero-badge inline-flex items-center gap-2 bg-green-50 dark:bg-green-500/8 border border-green-200 dark:border-green-500/20 text-green-700 dark:text-green-400 text-xs font-semibold px-3 py-1.5 rounded-full mb-8">
-        <span className="w-1.5 h-1.5 bg-green-600 dark:bg-green-400 rounded-full" />
+      <div className="hero-badge inline-flex items-center gap-2 border text-xs font-semibold px-3 py-1.5 rounded-full mb-8"
+        style={{ background: "#EAFFEC", borderColor: "#b6f0c8", color: "#00ae3b" }}
+      >
+        <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#00ae3b" }} />
         {t.landing.badge}
       </div>
 
-      <h1 className="hero-h1 text-5xl md:text-7xl font-black tracking-tight leading-[1.05] max-w-3xl mb-6 text-gray-900 dark:text-white">
+      <h1 className="hero-h1 text-5xl md:text-7xl font-black leading-[1.05] max-w-3xl mb-6 text-gray-900 dark:text-white">
         {t.landing.heroTitle}<br />
-        <span className="text-green-600 dark:text-green-400">{t.landing.heroAccent}</span>
+        <span style={{ color: "#00ae3b" }}>{t.landing.heroAccent}</span>
       </h1>
 
       <p className="hero-sub text-gray-500 dark:text-white/60 text-lg md:text-xl max-w-xl mb-10 leading-relaxed">
@@ -88,8 +90,8 @@ function BugReport() {
     <section id="bugs" className="py-24 px-6 border-t border-gray-100 dark:border-white/5">
       <div className="max-w-xl mx-auto">
         <div className="mb-8">
-          <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">{t.landing.feedbackLabel}</p>
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-2 text-gray-900 dark:text-white">
+          <p className="text-sm font-semibold mb-3 dark:text-green-400" style={{ color: "#00ae3b" }}>{t.landing.feedbackLabel}</p>
+          <h2 className="landing-heading text-3xl md:text-4xl font-black mb-2 text-gray-900 dark:text-white">
             {t.landing.bugTitle}
           </h2>
           <p className="text-gray-600 dark:text-white/60 text-sm leading-relaxed">
