@@ -19,7 +19,7 @@ export default function ComparisonSection() {
           {/* Left */}
           <div>
             <p className="text-sm font-semibold mb-3 dark:text-green-400" style={{ color: "#00ae3b" }}>{t.comparison.label}</p>
-            <h2 className="landing-heading text-3xl md:text-5xl font-black leading-tight text-gray-900 dark:text-white mb-5">
+            <h2 className="landing-heading text-3xl md:text-5xl font-medium leading-tight text-gray-900 dark:text-white mb-5">
               {t.comparison.title}<br />
               <span className="text-green-500 dark:text-green-400">{t.comparison.titleAccent}</span>
             </h2>

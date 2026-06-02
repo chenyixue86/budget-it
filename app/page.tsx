@@ -52,7 +52,7 @@ function Hero() {
         {t.landing.badge}
       </div>
 
-      <h1 className="hero-h1 text-5xl md:text-7xl font-black leading-[1.05] max-w-3xl mb-6 text-gray-900 dark:text-white">
+      <h1 className="hero-h1 text-5xl md:text-7xl font-medium leading-[1.05] max-w-3xl mb-6 text-gray-900 dark:text-white">
         {t.landing.heroTitle}<br />
         <span style={{ color: "#00ae3b" }}>{t.landing.heroAccent}</span>
       </h1>
@@ -91,7 +91,7 @@ function BugReport() {
       <div className="max-w-xl mx-auto">
         <div className="mb-8">
           <p className="text-sm font-semibold mb-3 dark:text-green-400" style={{ color: "#00ae3b" }}>{t.landing.feedbackLabel}</p>
-          <h2 className="landing-heading text-3xl md:text-4xl font-black mb-2 text-gray-900 dark:text-white">
+          <h2 className="landing-heading text-3xl md:text-4xl font-medium mb-2 text-gray-900 dark:text-white">
             {t.landing.bugTitle}
           </h2>
           <p className="text-gray-600 dark:text-white/60 text-sm leading-relaxed">

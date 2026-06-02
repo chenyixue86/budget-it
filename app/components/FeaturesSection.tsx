@@ -38,7 +38,7 @@ export default function FeaturesSection() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <p className="text-sm font-semibold mb-3 dark:text-green-400" style={{ color: "#00ae3b" }}>{f.label}</p>
-          <h2 className="landing-heading text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-4">
+          <h2 className="landing-heading text-3xl md:text-5xl font-medium text-gray-900 dark:text-white mb-4">
             {f.title}
           </h2>
           <p className="text-gray-600 dark:text-white/60 text-base max-w-md mx-auto">
