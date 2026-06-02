@@ -19,7 +19,7 @@ export default function ComparisonSection() {
           {/* Left */}
           <div>
             <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">{t.comparison.label}</p>
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight text-gray-900 dark:text-white mb-5">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight text-gray-900 dark:text-white mb-5">
               {t.comparison.title}<br />
               <span className="text-green-500 dark:text-green-400">{t.comparison.titleAccent}</span>
             </h2>

@@ -34,7 +34,7 @@ export default function LandingNavbar() {
           </button>
           <a
             href="/register"
-            className="btn-primary text-black text-sm font-semibold px-4 py-2 rounded-lg"
+            className="btn-primary text-white text-sm font-semibold px-4 py-2 rounded-lg"
           >
             Login
           </a>

@@ -65,54 +65,45 @@ body {
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(74, 222, 128, 0.08);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border-color: #e5e7eb;
 }
 
 .btn-primary {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
-  box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.3), 0 4px 24px rgba(34, 197, 94, 0.35);
-  transition: box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
-}
-
-.btn-primary::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-  transform: translateX(-100%) skewX(-12deg);
-}
-
-.btn-primary:hover::before {
-  animation: shimmer 0.6s ease forwards;
+  background: #15803d;
+  transition: background 0.15s ease, transform 0.15s ease;
 }
 
 .btn-primary:hover {
-  box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.5), 0 8px 32px rgba(34, 197, 94, 0.5);
+  background: #166534;
   transform: translateY(-1px);
 }
 
 .btn-primary:active {
+  background: #14532d;
   transform: translateY(0px);
 }
 
 .btn-secondary {
-  position: relative;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(8px);
+  border: 1px solid #e5e7eb;
+  background: transparent;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
 }
 
+.dark .btn-secondary {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
 .btn-secondary:hover {
-  border-color: rgba(255,255,255,0.22);
-  background: rgba(255,255,255,0.08);
+  border-color: #d1d5db;
+  background: #f9fafb;
   transform: translateY(-1px);
+}
+
+.dark .btn-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .btn-secondary:active {

@@ -25,32 +25,50 @@ function Hero() {
   const { t } = useLanguage();
   return (
     <section className="flex flex-col items-center justify-center text-center px-6 pt-28 md:pt-40 pb-16 md:pb-28 relative overflow-hidden">
-      <div className="hero-blob absolute top-1/3 left-1/2 w-[600px] h-[400px] bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Ecomflow-style dot pattern decorations */}
+      <div
+        className="absolute left-0 top-0 h-full w-72 pointer-events-none hidden md:block opacity-70 dark:opacity-15"
+        style={{
+          backgroundImage: "radial-gradient(circle, #86efac 1.5px, transparent 1.5px)",
+          backgroundSize: "22px 22px",
+          maskImage: "linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 100%)",
+        }}
+      />
+      <div
+        className="absolute right-0 top-0 h-full w-72 pointer-events-none hidden md:block opacity-70 dark:opacity-15"
+        style={{
+          backgroundImage: "radial-gradient(circle, #86efac 1.5px, transparent 1.5px)",
+          backgroundSize: "22px 22px",
+          maskImage: "linear-gradient(to left, rgba(0,0,0,0.5) 0%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,0.5) 0%, transparent 100%)",
+        }}
+      />
 
-      <div className="hero-badge inline-flex items-center gap-2 bg-green-500/10 dark:bg-green-400/10 border border-green-500/20 dark:border-green-400/20 text-green-600 dark:text-green-400 text-xs font-medium px-3 py-1.5 rounded-full mb-8">
-        <span className="w-1.5 h-1.5 bg-green-500 dark:bg-green-400 rounded-full animate-pulse" />
+      <div className="hero-badge inline-flex items-center gap-2 bg-green-50 dark:bg-green-500/8 border border-green-200 dark:border-green-500/20 text-green-700 dark:text-green-400 text-xs font-semibold px-3 py-1.5 rounded-full mb-8">
+        <span className="w-1.5 h-1.5 bg-green-600 dark:bg-green-400 rounded-full" />
         {t.landing.badge}
       </div>
 
-      <h1 className="hero-h1 text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] max-w-3xl mb-6 text-gray-900 dark:text-white">
+      <h1 className="hero-h1 text-5xl md:text-7xl font-black tracking-tight leading-[1.05] max-w-3xl mb-6 text-gray-900 dark:text-white">
         {t.landing.heroTitle}<br />
-        <span className="text-green-500 dark:text-green-400">{t.landing.heroAccent}</span>
+        <span className="text-green-600 dark:text-green-400">{t.landing.heroAccent}</span>
       </h1>
 
-      <p className="hero-sub text-gray-600 dark:text-white/65 text-lg md:text-xl max-w-xl mb-10 leading-relaxed">
+      <p className="hero-sub text-gray-500 dark:text-white/60 text-lg md:text-xl max-w-xl mb-10 leading-relaxed">
         {t.landing.heroSub}
       </p>
 
       <div className="hero-cta flex flex-col sm:flex-row gap-3">
         <a
           href="/login"
-          className="btn-primary text-black font-semibold px-7 py-3.5 rounded-xl text-sm"
+          className="btn-primary text-white font-semibold px-7 py-3.5 rounded-xl text-sm"
         >
           {t.landing.loginBtn}
         </a>
         <a
           href="#how-it-works"
-          className="btn-secondary text-gray-600 dark:text-white/70 font-medium px-7 py-3.5 rounded-xl text-sm"
+          className="btn-secondary text-gray-700 dark:text-white/70 font-medium px-7 py-3.5 rounded-xl text-sm"
         >
           {t.landing.howItWorksBtn}
         </a>
@@ -71,7 +89,7 @@ function BugReport() {
       <div className="max-w-xl mx-auto">
         <div className="mb-8">
           <p className="text-green-600 dark:text-green-400 text-sm font-medium mb-3">{t.landing.feedbackLabel}</p>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-2 text-gray-900 dark:text-white">
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-2 text-gray-900 dark:text-white">
             {t.landing.bugTitle}
           </h2>
           <p className="text-gray-600 dark:text-white/60 text-sm leading-relaxed">

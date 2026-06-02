@@ -140,7 +140,7 @@ export default function BugReportForm() {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="btn-primary w-full text-black font-semibold py-3.5 rounded-xl text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        className="btn-primary w-full text-white font-semibold py-3.5 rounded-xl text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {status === "loading" ? t.bugForm.sending : t.bugForm.send}
       </button>
