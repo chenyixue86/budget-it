@@ -48,7 +48,7 @@ function Hero() {
       <div className="hero-badge inline-flex items-center gap-2 border text-xs font-semibold px-3 py-1.5 rounded-full mb-8"
         style={{ background: "#EAFFEC", borderColor: "#b6f0c8", color: "#00ae3b" }}
       >
-        <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#00ae3b" }} />
+        <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#00ae3b" }} />
         {t.landing.badge}
       </div>
 

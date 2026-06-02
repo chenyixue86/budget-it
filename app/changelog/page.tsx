@@ -21,7 +21,7 @@ export default function ChangelogPage() {
       <div className="max-w-2xl mx-auto px-6 pt-36 pb-24 w-full">
         <div className="mb-14">
           <span className="inline-flex items-center gap-2 bg-green-500/10 dark:bg-green-400/10 border border-green-500/20 dark:border-green-400/20 text-green-600 dark:text-green-400 text-xs font-medium px-3 py-1.5 rounded-full mb-5">
-            <span className="w-1.5 h-1.5 bg-green-500 dark:bg-green-400 rounded-full" />
+            <span className="w-1.5 h-1.5 bg-green-500 dark:bg-green-400 rounded-full animate-pulse" />
             {badge}
           </span>
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-3">
