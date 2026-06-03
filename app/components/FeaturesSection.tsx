@@ -50,9 +50,9 @@ export default function FeaturesSection() {
           {f.items.map((item, i) => (
             <div
               key={item.title}
-              className="bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-colors duration-200"
+              className="group bg-white dark:bg-[#111111] rounded-2xl border border-gray-100 dark:border-white/10 p-6 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/8 hover:-translate-y-1 hover:border-green-500/30 dark:hover:border-green-400/20 cursor-default"
             >
-              <div className="w-10 h-10 rounded-xl bg-green-500/10 dark:bg-green-400/10 border border-green-500/20 dark:border-green-400/20 flex items-center justify-center text-green-600 dark:text-green-400 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-green-500/10 dark:bg-green-400/10 border border-green-500/20 dark:border-green-400/20 flex items-center justify-center text-green-600 dark:text-green-400 mb-4 transition-all duration-300 group-hover:bg-green-500/15 group-hover:scale-110">
                 {ICONS[i]}
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2 text-sm">{item.title}</h3>
